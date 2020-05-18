@@ -13,4 +13,7 @@ require (
 	github.com/gobuffalo/x v0.0.0-20190224155809-6bb134105960
 	github.com/rs/cors v1.7.0
 	github.com/unrolled/secure v0.0.0-20190103195806-76e6d4e9b90c
+	github.com/markbates/grift v1.5.0
+	github.com/gobuffalo/packr/v2 v2.8.0
+	github.com/gobuffalo/suite v2.8.2+incompatible
 )
