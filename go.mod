@@ -16,4 +16,6 @@ require (
 	github.com/markbates/grift v1.5.0
 	github.com/gobuffalo/packr/v2 v2.8.0
 	github.com/gobuffalo/suite v2.8.2+incompatible
+	github.com/gofrs/uuid v3.2.0+incompatible
+	github.com/gobuffalo/validate/v3 v3.1.0
 )
