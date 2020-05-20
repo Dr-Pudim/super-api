@@ -385,6 +385,8 @@ github.com/gobuffalo/nulls v0.0.0-20190305142546-85f3c9250d87/go.mod h1:KhaLCW+k
 github.com/gobuffalo/nulls v0.1.0/go.mod h1:/HRtuDRoVoN5fABk3J6jzZaGEdcIZEMs0qczj71eKZY=
 github.com/gobuffalo/nulls v0.2.0 h1:7R0Uec6JlZI02TR29zrs3KFIuUV8Sqe/s/j3yLvs+gc=
 github.com/gobuffalo/nulls v0.2.0/go.mod h1:w4q8RoSCEt87Q0K0sRIZWYeIxkxog5mh3eN3C/n+dUc=
+github.com/gobuffalo/nulls v0.4.0 h1:xi+JHGWIetYqLmS520dSWc8Ifj1P0aNXKTVDMVsPXmw=
+github.com/gobuffalo/nulls v0.4.0/go.mod h1:2KmsoLnMrxpwPLN5LmBbm6tmttHSIZr/v/OdGsATM3M=
 github.com/gobuffalo/packd v0.0.0-20181027182251-01ad393492c8/go.mod h1:SmdBdhj6uhOsg1Ui4SFAyrhuc7U4VCildosO5IDJ3lc=
 github.com/gobuffalo/packd v0.0.0-20181027190505-aafc0d02c411/go.mod h1:SmdBdhj6uhOsg1Ui4SFAyrhuc7U4VCildosO5IDJ3lc=
 github.com/gobuffalo/packd v0.0.0-20181027194105-7ae579e6d213/go.mod h1:SmdBdhj6uhOsg1Ui4SFAyrhuc7U4VCildosO5IDJ3lc=
@@ -1142,6 +1144,7 @@ google.golang.org/appengine v1.3.0/go.mod h1:xpcJRLb0r/rnEns0DIKYYv+WjYCduHsrkT7
 google.golang.org/appengine v1.4.0/go.mod h1:xpcJRLb0r/rnEns0DIKYYv+WjYCduHsrkT7/EB5XEv4=
 google.golang.org/appengine v1.6.0/go.mod h1:xpcJRLb0r/rnEns0DIKYYv+WjYCduHsrkT7/EB5XEv4=
 google.golang.org/appengine v1.6.1/go.mod h1:i06prIuMbXzDqacNJfV5OdTW448YApPu5ww/cMBSeb0=
+google.golang.org/appengine v1.6.5/go.mod h1:8WjMMxjGQR8xUklV/ARdw2HLXBOI7O7uCIDZVag1xfc=
 google.golang.org/genproto v0.0.0-20180817151627-c66870c02cf8/go.mod h1:JiN7NxoALGmiZfu7CAH4rXhgtRTLTxftemlI0sWmxmc=
 google.golang.org/genproto v0.0.0-20180831171423-11092d34479b/go.mod h1:JiN7NxoALGmiZfu7CAH4rXhgtRTLTxftemlI0sWmxmc=
 google.golang.org/genproto v0.0.0-20181029155118-b69ba1387ce2/go.mod h1:JiN7NxoALGmiZfu7CAH4rXhgtRTLTxftemlI0sWmxmc=
