@@ -59,6 +59,7 @@ func App() *buffalo.App {
 		app.Use(popmw.Transaction(models.DB))
 
 		app.GET("/", HomeHandler)
+		app.GET("/supers/create", SupersCreate)
 	}
 
 	return app
