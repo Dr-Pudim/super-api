@@ -1,13 +1,268 @@
 package actions
 
 import (
-    "net/http"
-    
+	"encoding/json"
+	"fmt"
+	"io/ioutil"
+	"net/http"
+	"os"
+	"strconv"
+	"strings"
+	"super_api/models"
+
 	"github.com/gobuffalo/buffalo"
+	"github.com/gobuffalo/pop/v5"
 )
+
+func isNullValue(s string) bool {
+	if s == "null" || s == "-" || s == "" {
+		return true
+	}
+	return false
+}
+
+func convertFirstWordToInt(s string) (int, error) {
+	i := strings.Index(s, " ")
+	if i > -1 {
+		return strconv.Atoi(s[:i])
+	}
+	return strconv.Atoi(s)
+}
+
+type powerStats struct {
+	Intelligence string `json:"intelligence"`
+	Strength     string `json:"strength"`
+	Speed        string `json:"speed"`
+	Durability   string `json:"durability"`
+	Power        string `json:"power"`
+	Combat       string `json:"combat"`
+}
+
+type biography struct {
+	FullName        string   `json:"full-name"`
+	AlterEgos       string   `json:"alter-egos"`
+	Aliases         []string `json:"aliases"`
+	PlaceOfBirth    string   `json:"place-of-birth"`
+	FirstAppearance string   `json:"first-appearance"`
+	Publisher       string   `json:"publisher"`
+	Alignment       string   `json:"alignment"`
+}
+
+type appearance struct {
+	Gender    string   `json:"gender"`
+	Race      string   `json:"race"`
+	Height    []string `json:"height"`
+	Weight    []string `json:"weight"`
+	EyeColor  string   `json:"eye-color"`
+	HairColor string   `json:"hair-color"`
+}
+
+type work struct {
+	Occupation string `json:"occupation"`
+	Base       string `json:"base"`
+}
+
+type connections struct {
+	GroupAffiliation string `json:"group-affiliation"`
+	Relatives        string `json:"relatives"`
+}
+
+type image struct {
+	URL string `json:"url"`
+}
+
+type character struct {
+	ID          string      `json:"id"`
+	Name        string      `json:"name"`
+	Powerstats  powerStats  `json:"powerstats"`
+	Biography   biography   `json:"biography"`
+	Appearance  appearance  `json:"appearance"`
+	Work        work        `json:"work"`
+	Connections connections `json:"connections"`
+	Image       image       `json:"image"`
+}
+
+//SearchResponse é uma struct que representa uma resposta de pesquisa da superheroapi.com
+type SearchResponse struct {
+	Response   string      `json:"response"`
+	Resultsfor string      `json:"results-for"`
+	Results    []character `json:"results"`
+}
 
 // SupersCreate default implementation.
 func SupersCreate(c buffalo.Context) error {
-	return c.Render(http.StatusOK, r.HTML("supers/create.html"))
+	//Lê nome no parametro da rota
+	param := c.Param("name")
+	//Se não houver o parametro name, retornar mensagem
+	if param == "" {
+		return c.Render(http.StatusOK, r.JSON(map[string]string{"message": "Sem parametro name para buscar"}))
+	}
+	//Gera url de pesquisa para consultar a superheroapi
+	url := fmt.Sprintf("https://superheroapi.com/api/%s/search/%s", os.Getenv("SUPERHEROAPI_ACCESS_TOKEN"), param)
+	//Faz chama a superheroapi para procurar o super
+	resp, err := http.Get(url)
+	//Tratamento de erro da chamada
+	if err != nil {
+		return c.Render(http.StatusOK, r.JSON(map[string]string{"message": "Erro na chamada a superheroapi"}))
+	}
+	//Adiciona fechamento da resposta a pilha do defer
+	defer resp.Body.Close()
+	//Lê resposta em uma array de bytes
+	respByte, err := ioutil.ReadAll(resp.Body)
+	//Tratamento de erro da leitura de resposta
+	if err != nil {
+		return c.Render(http.StatusOK, r.JSON(map[string]string{"message": "Erro na leitura da resposta"}))
+	}
+	//Cria variavel para json de resposta e deserializa respByte
+	var searchResponse SearchResponse
+	err = json.Unmarshal(respByte, &searchResponse)
+	//Tratamento de erro da deserialização
+	if err != nil {
+		return c.Render(http.StatusOK, r.JSON(map[string]string{"message": "Erro na conversão de Json"}))
+	}
+	if searchResponse.Response == "error" {
+		return c.Render(http.StatusOK, r.JSON(searchResponse))
+	}
+	//Pega conexão ao banco de dados do contexto
+	tx, ok := c.Value("tx").(*pop.Connection)
+	if !ok {
+		return fmt.Errorf("no transaction found")
+	}
+	//Para cada resultado da pesquisa, adiciona id da superheroapi em query
+	results := searchResponse.Results
+	var resultsIDS []interface{}
+	for i, result := range results {
+		//Converte id do resultado de string para int
+		originalID, err := strconv.Atoi(result.ID)
+		//Tratamento de erro da conversão
+		if err != nil {
+			message := fmt.Sprintf("Erro na conversão do resultado %d", i)
+			return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+		}
+		//Adiciona id a slice
+		resultsIDS = append(resultsIDS, originalID)
+	}
+	q := tx.Where("original_id in (?)", resultsIDS...)
+	//Seleciona apenas a coluna com as ids da superheroapi
+	q.Select("original_id")
+	//Array para conter as ids da superheroapi que ja estão no banco
+	//var alreadyOnDB []int
+	//Executa query para pegar quais ids ja estão no banco de dados
+	supersAlreadyOnDB := []models.Super{}
+	q.All(&supersAlreadyOnDB)
+	//Array para devolver supers registrados
+	var registredSupers []models.Super = []models.Super{}
+	//Para cada resultado da pesquisa, confere se o id da superhero api bate com um original_id já no banco de dados, e adiciona novo super ao banco de dados caso não
+	for i, result := range results {
+		//Boolean que indica se o id da superapi do resultado atual já esta no bando da dados
+		idAlreadyOnDB := false
+		//Converte id da superapi do resultado atual de string para int
+		currentID, err := strconv.Atoi(result.ID)
+		//Tratamento de erro da conversão
+		if err != nil {
+			message := fmt.Sprintf("Erro na conversão do resultado %d", i)
+			return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+		}
+		//Para cada id da superapi achado no bando de dados, confere se o resultado atual possui o mesmo id
+		for _, superOnDB := range supersAlreadyOnDB {
+			if currentID == superOnDB.OriginalID {
+				idAlreadyOnDB = true
+				break
+			}
+		}
+		//Caso o resultado atual não ja esteja no banco de dados, cria novo super
+		if !idAlreadyOnDB {
+			//Atribui valores do resultado ao objeto de modelo de super
+			super := &models.Super{}
+			super.OriginalID = currentID
+			super.Name = result.Name
+			if !isNullValue(result.Biography.FullName) {
+				super.FullName = result.Biography.FullName
+			}
+			if !isNullValue(result.Biography.PlaceOfBirth) {
+				super.PlaceOfBirth = result.Biography.PlaceOfBirth
+			}
+			if !isNullValue(result.Biography.FirstAppearance) {
+				super.FirstAppearance = result.Biography.FirstAppearance
+			}
+			super.AlterEgos = result.Biography.AlterEgos
+			super.Publisher = result.Biography.Publisher
+			super.Alignment = result.Biography.Alignment
+			if !isNullValue(result.Appearance.Gender) {
+				super.Gender = result.Appearance.Gender
+			}
+			if !isNullValue(result.Appearance.Race) {
+				super.Race = result.Appearance.Race
+			}
+			super.HeightFeet = result.Appearance.Height[0]
+			heightCm, err := convertFirstWordToInt(result.Appearance.Height[1])
+			if err != nil {
+				message := fmt.Sprintf("Erro na conversão do resultado %d", i)
+				return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+			}
+			super.HeightCm = heightCm
+			super.WeightLb = result.Appearance.Weight[0]
+			weightKg, err := convertFirstWordToInt(result.Appearance.Weight[1])
+			if err != nil {
+				message := fmt.Sprintf("Erro na conversão do resultado %d", i)
+				return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+			}
+			super.WeightKg = weightKg
+			if !isNullValue(result.Appearance.EyeColor) {
+				super.EyeColor = result.Appearance.EyeColor
+			}
+			if !isNullValue(result.Appearance.HairColor) {
+				super.HairColor = result.Appearance.HairColor
+			}
+			if !isNullValue(result.Work.Occupation) {
+				super.Occupation = result.Work.Occupation
+			}
+			if !isNullValue(result.Work.Base) {
+				super.Base = result.Work.Base
+			}
+			if !isNullValue(result.Image.URL) {
+				super.Image = result.Image.URL
+			}
+			intelligence, err := convertFirstWordToInt(result.Powerstats.Intelligence)
+			if err != nil {
+				message := fmt.Sprintf("Erro na conversão do resultado %d", i)
+				return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+			}
+			super.Intelligence = intelligence
+			strength, err := convertFirstWordToInt(result.Powerstats.Strength)
+			if err != nil {
+				message := fmt.Sprintf("Erro na conversão do resultado %d", i)
+				return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+			}
+			super.Strength = strength
+			speed, err := convertFirstWordToInt(result.Powerstats.Speed)
+			if err != nil {
+				message := fmt.Sprintf("Erro na conversão do resultado %d", i)
+				return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+			}
+			super.Speed = speed
+			durability, err := convertFirstWordToInt(result.Powerstats.Durability)
+			if err != nil {
+				message := fmt.Sprintf("Erro na conversão do resultado %d", i)
+				return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+			}
+			super.Durability = durability
+			power, err := convertFirstWordToInt(result.Powerstats.Power)
+			if err != nil {
+				message := fmt.Sprintf("Erro na conversão do resultado %d", i)
+				return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+			}
+			super.Power = power
+			combat, err := convertFirstWordToInt(result.Powerstats.Combat)
+			if err != nil {
+				message := fmt.Sprintf("Erro na conversão do resultado %d", i)
+				return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+			}
+			super.Combat = combat
+			//Valida e cria super
+			tx.ValidateAndCreate(super)
+			registredSupers = append(registredSupers, *super)
+		}
+	}
+	return c.Render(http.StatusOK, r.JSON(registredSupers))
 }
-
