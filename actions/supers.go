@@ -267,17 +267,22 @@ func SupersCreate(c buffalo.Context) error {
 	return c.Render(http.StatusOK, r.JSON(registredSupers))
 }
 
+//SupersAll lista todos os supers registrados
 func SupersAll(c buffalo.Context) error {
 	//Pega conexão ao banco de dados do contexto
 	tx, ok := c.Value("tx").(*pop.Connection)
 	if !ok {
 		return fmt.Errorf("no transaction found")
 	}
+	//Cria variavel para receber supers
 	supers := &models.Supers{}
+	//Executa query para pegar todos os supers
 	tx.All(supers)
+	//Renderiza json
 	return c.Render(http.StatusOK, r.JSON(supers))
 }
 
+//SupersHeros lista todos os supers registrados que são herois
 func SupersHeros(c buffalo.Context) error {
 	//Pega conexão ao banco de dados do contexto
 	tx, ok := c.Value("tx").(*pop.Connection)
@@ -286,11 +291,15 @@ func SupersHeros(c buffalo.Context) error {
 	}
 	//Cria array de supers
 	supers := &models.Supers{}
+	//Cria query que seleciona apenas supers que são herois
 	q := tx.Where("alignment = ?", "good")
+	//Executa query
 	q.All(supers)
+	//Renderiza json
 	return c.Render(http.StatusOK, r.JSON(supers))
 }
 
+//SupersVillains lista todos os supers registrados que são vilões
 func SupersVillains(c buffalo.Context) error {
 	//Pega conexão ao banco de dados do contexto
 	tx, ok := c.Value("tx").(*pop.Connection)
@@ -299,7 +308,10 @@ func SupersVillains(c buffalo.Context) error {
 	}
 	//Cria array de supers
 	supers := &models.Supers{}
+	//Cria query que seleciona apenas supers que são vilões
 	q := tx.Where("alignment = ?", "bad")
+	//Executa query
 	q.All(supers)
+	//Renderiza json
 	return c.Render(http.StatusOK, r.JSON(supers))
 }
