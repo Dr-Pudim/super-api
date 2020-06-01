@@ -315,3 +315,25 @@ func SupersVillains(c buffalo.Context) error {
 	//Renderiza json
 	return c.Render(http.StatusOK, r.JSON(supers))
 }
+
+//SupersDestroy deleta do banco de dados o super cujo id é passado pelo parametro "super_id"
+func SupersDestroy(c buffalo.Context) error {
+	//Pega conexão ao banco de dados do contexto
+	tx, ok := c.Value("tx").(*pop.Connection)
+	if !ok {
+		return fmt.Errorf("no transaction found")
+	}
+
+	//Aloca um super vazio
+	super := &models.Super{}
+
+	//Procura super
+	if err := tx.Find(super, c.Param("super_id")); err != nil {
+		return c.Error(http.StatusNotFound, err)
+	}
+
+	if err := tx.Destroy(super); err != nil {
+		return err
+	}
+	return c.Render(http.StatusOK, r.JSON(super))
+}
