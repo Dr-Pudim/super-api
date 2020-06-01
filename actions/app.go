@@ -60,6 +60,7 @@ func App() *buffalo.App {
 
 		app.GET("/", HomeHandler)
 		app.GET("/create", SupersCreate)
+		app.GET("/all", SupersAll)
 	}
 
 	return app

@@ -266,3 +266,14 @@ func SupersCreate(c buffalo.Context) error {
 	}
 	return c.Render(http.StatusOK, r.JSON(registredSupers))
 }
+
+func SupersAll(c buffalo.Context) error {
+	//Pega conexão ao banco de dados do contexto
+	tx, ok := c.Value("tx").(*pop.Connection)
+	if !ok {
+		return fmt.Errorf("no transaction found")
+	}
+	supers := &models.Supers{}
+	tx.All(supers)
+	return c.Render(http.StatusOK, r.JSON(supers))
+}
