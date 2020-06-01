@@ -290,3 +290,16 @@ func SupersHeros(c buffalo.Context) error {
 	q.All(supers)
 	return c.Render(http.StatusOK, r.JSON(supers))
 }
+
+func SupersVillains(c buffalo.Context) error {
+	//Pega conexão ao banco de dados do contexto
+	tx, ok := c.Value("tx").(*pop.Connection)
+	if !ok {
+		return fmt.Errorf("no transaction found")
+	}
+	//Cria array de supers
+	supers := &models.Supers{}
+	q := tx.Where("alignment = ?", "bad")
+	q.All(supers)
+	return c.Render(http.StatusOK, r.JSON(supers))
+}

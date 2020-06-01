@@ -62,6 +62,7 @@ func App() *buffalo.App {
 		app.GET("/create", SupersCreate)
 		app.GET("/all", SupersAll)
 		app.GET("/heros", SupersHeros)
+		app.GET("/villains", SupersVillains)
 	}
 
 	return app
