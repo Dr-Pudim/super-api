@@ -389,10 +389,17 @@ func SupersSearch(c buffalo.Context) error {
 	if !ok {
 		return fmt.Errorf("no transaction found")
 	}
-	//Query de busca
-	q := tx.Q()
 	//Parametros enviados pela rota
 	params := c.Params()
+	//Confere se existe parametro uuid
+	uuid := params.Get("uuid")
+	if uuid != "" {
+		super := models.Super{}
+		tx.Find(&super, uuid)
+		return c.Render(http.StatusOK, r.JSON(super))
+	}
+	//Query de busca
+	q := tx.Q()
 	//Adicionar where para cada parametro
 	//Confere parametros de powerstats
 	intelligenceParam := params.Get("intelligence")
