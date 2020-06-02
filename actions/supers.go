@@ -29,6 +29,22 @@ func convertFirstWordToInt(s string) (int, error) {
 	return strconv.Atoi(s)
 }
 
+func superContainsName(super models.Super, name string) bool {
+	return strings.Contains(strings.ToLower(super.Name), strings.ToLower(name))
+}
+
+func filterSupersName(supers []models.Super, name string) []models.Super {
+	//Aloca array de supers
+	filteredSupers := []models.Super{}
+	//Para cada super, comparar name
+	for _, super := range supers {
+		if superContainsName(super, name) {
+			filteredSupers = append(filteredSupers, super)
+		}
+	}
+	return filteredSupers
+}
+
 type powerStats struct {
 	Intelligence string `json:"intelligence"`
 	Strength     string `json:"strength"`
@@ -340,4 +356,31 @@ func SupersDestroy(c buffalo.Context) error {
 		return err
 	}
 	return c.Render(http.StatusOK, r.JSON(super))
+}
+
+//SupersSearch é a ação de busca de supers
+func SupersSearch(c buffalo.Context) error {
+	//Pega conexão ao banco de dados do contexto
+	tx, ok := c.Value("tx").(*pop.Connection)
+	if !ok {
+		return fmt.Errorf("no transaction found")
+	}
+	//Query de busca
+	q := tx.Q()
+	//Parametros enviados pela rota
+	params := c.Params()
+	//Contador de parametros para query encontrados
+	//queryParamCount := 0
+	//Adicionar where para cada parametro
+
+	//Aloca array de supers para receber resultado da query
+	supers := []models.Super{}
+	//Executa query
+	q.All(&supers)
+	//Carrega parametro name
+	name := params.Get("name")
+	if name != "" {
+		supers = filterSupersName(supers, name)
+	}
+	return c.Render(http.StatusOK, r.JSON(supers))
 }
