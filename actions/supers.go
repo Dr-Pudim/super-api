@@ -225,40 +225,40 @@ func SupersCreate(c buffalo.Context) error {
 			}
 			intelligence, err := convertFirstWordToInt(result.Powerstats.Intelligence)
 			if err != nil {
-				message := fmt.Sprintf("Erro na conversão do resultado %d", i)
-				return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+				super.Intelligence = 0
+			} else {
+				super.Intelligence = intelligence
 			}
-			super.Intelligence = intelligence
 			strength, err := convertFirstWordToInt(result.Powerstats.Strength)
 			if err != nil {
-				message := fmt.Sprintf("Erro na conversão do resultado %d", i)
-				return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+				super.Strength = 0
+			} else {
+				super.Strength = strength
 			}
-			super.Strength = strength
 			speed, err := convertFirstWordToInt(result.Powerstats.Speed)
 			if err != nil {
-				message := fmt.Sprintf("Erro na conversão do resultado %d", i)
-				return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+				super.Speed = 0
+			} else {
+				super.Speed = speed
 			}
-			super.Speed = speed
 			durability, err := convertFirstWordToInt(result.Powerstats.Durability)
 			if err != nil {
-				message := fmt.Sprintf("Erro na conversão do resultado %d", i)
-				return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+				super.Durability = 0
+			} else {
+				super.Durability = durability
 			}
-			super.Durability = durability
 			power, err := convertFirstWordToInt(result.Powerstats.Power)
 			if err != nil {
-				message := fmt.Sprintf("Erro na conversão do resultado %d", i)
-				return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+				super.Power = 0
+			} else {
+				super.Power = power
 			}
-			super.Power = power
 			combat, err := convertFirstWordToInt(result.Powerstats.Combat)
 			if err != nil {
-				message := fmt.Sprintf("Erro na conversão do resultado %d", i)
-				return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+				super.Combat = 0
+			} else {
+				super.Combat = combat
 			}
-			super.Combat = combat
 			//Valida e cria super
 			tx.ValidateAndCreate(super)
 			registredSupers = append(registredSupers, *super)
