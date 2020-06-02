@@ -59,7 +59,7 @@ func App() *buffalo.App {
 		app.Use(popmw.Transaction(models.DB))
 
 		app.GET("/", HomeHandler)
-		app.GET("/create", SupersCreate)
+		app.GET("/add", SupersCreate)
 		app.GET("/all", SupersAll)
 		app.GET("/heros", SupersHeros)
 		app.GET("/villains", SupersVillains)
