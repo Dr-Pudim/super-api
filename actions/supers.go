@@ -45,6 +45,30 @@ func filterSupersName(supers []models.Super, name string) []models.Super {
 	return filteredSupers
 }
 
+func filterSupersFullName(supers []models.Super, name string) []models.Super {
+	//Aloca array de supers
+	filteredSupers := []models.Super{}
+	//Para cada super, comparar name
+	for _, super := range supers {
+		if stringContainsSubstring(super.FullName, name) {
+			filteredSupers = append(filteredSupers, super)
+		}
+	}
+	return filteredSupers
+}
+
+func filterSupersOccupation(supers []models.Super, name string) []models.Super {
+	//Aloca array de supers
+	filteredSupers := []models.Super{}
+	//Para cada super, comparar name
+	for _, super := range supers {
+		if stringContainsSubstring(super.Occupation, name) {
+			filteredSupers = append(filteredSupers, super)
+		}
+	}
+	return filteredSupers
+}
+
 type powerStats struct {
 	Intelligence string `json:"intelligence"`
 	Strength     string `json:"strength"`
@@ -369,18 +393,75 @@ func SupersSearch(c buffalo.Context) error {
 	q := tx.Q()
 	//Parametros enviados pela rota
 	params := c.Params()
-	//Contador de parametros para query encontrados
-	//queryParamCount := 0
 	//Adicionar where para cada parametro
-
+	//Confere parametros de powerstats
+	intelligenceParam := params.Get("intelligence")
+	if intelligenceParam != "" {
+		intelligence, err := convertFirstWordToInt(intelligenceParam)
+		if err != nil {
+			return c.Render(http.StatusBadRequest, r.JSON(map[string]string{"Erro": "Parametro intelligence deve conter int"}))
+		}
+		q.Where("intelligence >= ?", intelligence)
+	}
+	strengthParam := params.Get("strength")
+	if strengthParam != "" {
+		strength, err := convertFirstWordToInt(strengthParam)
+		if err != nil {
+			return c.Render(http.StatusBadRequest, r.JSON(map[string]string{"Erro": "Parametro strength deve conter int"}))
+		}
+		q.Where("strength >= ?", strength)
+	}
+	speedParam := params.Get("speed")
+	if speedParam != "" {
+		speed, err := convertFirstWordToInt(speedParam)
+		if err != nil {
+			return c.Render(http.StatusBadRequest, r.JSON(map[string]string{"Erro": "Parametro speed deve conter int"}))
+		}
+		q.Where("speed >= ?", speed)
+	}
+	durabilityParam := params.Get("durability")
+	if durabilityParam != "" {
+		durability, err := convertFirstWordToInt(durabilityParam)
+		if err != nil {
+			return c.Render(http.StatusBadRequest, r.JSON(map[string]string{"Erro": "Parametro durability deve conter int"}))
+		}
+		q.Where("durability >= ?", durability)
+	}
+	powerParam := params.Get("power")
+	if powerParam != "" {
+		power, err := convertFirstWordToInt(powerParam)
+		if err != nil {
+			return c.Render(http.StatusBadRequest, r.JSON(map[string]string{"Erro": "Parametro power deve conter int"}))
+		}
+		q.Where("power >= ?", power)
+	}
+	combatParam := params.Get("combat")
+	if combatParam != "" {
+		combat, err := convertFirstWordToInt(combatParam)
+		if err != nil {
+			return c.Render(http.StatusBadRequest, r.JSON(map[string]string{"Erro": "Parametro combat deve conter int"}))
+		}
+		q.Where("combat >= ?", combat)
+	}
 	//Aloca array de supers para receber resultado da query
 	supers := []models.Super{}
 	//Executa query
 	q.All(&supers)
+	//Confere parametros para filtrar resultado da query
 	//Carrega parametro name
 	name := params.Get("name")
 	if name != "" {
 		supers = filterSupersName(supers, name)
+	}
+	//Carrega parametro full_name
+	fullName := params.Get("full_name")
+	if fullName != "" {
+		supers = filterSupersFullName(supers, fullName)
+	}
+	//Carrega parametro occupation
+	occupation := params.Get("occupation")
+	if occupation != "" {
+		supers = filterSupersOccupation(supers, occupation)
 	}
 	return c.Render(http.StatusOK, r.JSON(supers))
 }
