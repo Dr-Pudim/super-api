@@ -29,8 +29,8 @@ func convertFirstWordToInt(s string) (int, error) {
 	return strconv.Atoi(s)
 }
 
-func superContainsName(super models.Super, name string) bool {
-	return strings.Contains(strings.ToLower(super.Name), strings.ToLower(name))
+func stringContainsSubstring(s string, subString string) bool {
+	return strings.Contains(strings.ToLower(s), strings.ToLower(subString))
 }
 
 func filterSupersName(supers []models.Super, name string) []models.Super {
@@ -38,7 +38,7 @@ func filterSupersName(supers []models.Super, name string) []models.Super {
 	filteredSupers := []models.Super{}
 	//Para cada super, comparar name
 	for _, super := range supers {
-		if superContainsName(super, name) {
+		if stringContainsSubstring(super.Name, name) {
 			filteredSupers = append(filteredSupers, super)
 		}
 	}
