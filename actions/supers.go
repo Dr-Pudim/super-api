@@ -69,6 +69,54 @@ func filterSupersOccupation(supers []models.Super, name string) []models.Super {
 	return filteredSupers
 }
 
+func filterSupersGender(supers []models.Super, name string) []models.Super {
+	//Aloca array de supers
+	filteredSupers := []models.Super{}
+	//Para cada super, comparar name
+	for _, super := range supers {
+		if strings.ToLower(super.Gender) == strings.ToLower(name) {
+			filteredSupers = append(filteredSupers, super)
+		}
+	}
+	return filteredSupers
+}
+
+func filterSupersRace(supers []models.Super, name string) []models.Super {
+	//Aloca array de supers
+	filteredSupers := []models.Super{}
+	//Para cada super, comparar name
+	for _, super := range supers {
+		if stringContainsSubstring(super.Race, name) {
+			filteredSupers = append(filteredSupers, super)
+		}
+	}
+	return filteredSupers
+}
+
+func filterSupersEyeColor(supers []models.Super, name string) []models.Super {
+	//Aloca array de supers
+	filteredSupers := []models.Super{}
+	//Para cada super, comparar name
+	for _, super := range supers {
+		if stringContainsSubstring(super.EyeColor, name) {
+			filteredSupers = append(filteredSupers, super)
+		}
+	}
+	return filteredSupers
+}
+
+func filterSupersHairColor(supers []models.Super, name string) []models.Super {
+	//Aloca array de supers
+	filteredSupers := []models.Super{}
+	//Para cada super, comparar name
+	for _, super := range supers {
+		if stringContainsSubstring(super.HairColor, name) {
+			filteredSupers = append(filteredSupers, super)
+		}
+	}
+	return filteredSupers
+}
+
 type powerStats struct {
 	Intelligence string `json:"intelligence"`
 	Strength     string `json:"strength"`
@@ -450,6 +498,43 @@ func SupersSearch(c buffalo.Context) error {
 		}
 		q.Where("combat >= ?", combat)
 	}
+	//Confere parametros de altura e peso
+	//Altura minima
+	mimHeightParam := params.Get("min_height")
+	if mimHeightParam != "" {
+		minHeight, err := convertFirstWordToInt(mimHeightParam)
+		if err != nil {
+			return c.Render(http.StatusBadRequest, r.JSON(map[string]string{"Erro": "Parametro mim_height deve conter int"}))
+		}
+		q.Where("height_cm >= ?", minHeight)
+	}
+	//Altura maxima
+	maxHeightParam := params.Get("max_height")
+	if maxHeightParam != "" {
+		maxHeight, err := convertFirstWordToInt(maxHeightParam)
+		if err != nil {
+			return c.Render(http.StatusBadRequest, r.JSON(map[string]string{"Erro": "Parametro max_height deve conter int"}))
+		}
+		q.Where("height_cm <= ?", maxHeight)
+	}
+	//Peso minimo
+	mimWeightParam := params.Get("min_weight")
+	if mimWeightParam != "" {
+		minWeight, err := convertFirstWordToInt(mimWeightParam)
+		if err != nil {
+			return c.Render(http.StatusBadRequest, r.JSON(map[string]string{"Erro": "Parametro mim_weight deve conter int"}))
+		}
+		q.Where("weight_kg >= ?", minWeight)
+	}
+	//Peso maximo
+	maxWeightParam := params.Get("max_weight")
+	if maxWeightParam != "" {
+		maxWeight, err := convertFirstWordToInt(maxWeightParam)
+		if err != nil {
+			return c.Render(http.StatusBadRequest, r.JSON(map[string]string{"Erro": "Parametro max_weight deve conter int"}))
+		}
+		q.Where("weight_kg <= ?", maxWeight)
+	}
 	//Aloca array de supers para receber resultado da query
 	supers := []models.Super{}
 	//Executa query
@@ -469,6 +554,26 @@ func SupersSearch(c buffalo.Context) error {
 	occupation := params.Get("occupation")
 	if occupation != "" {
 		supers = filterSupersOccupation(supers, occupation)
+	}
+	//Carrega parametro gender
+	gender := params.Get("gender")
+	if gender != "" {
+		supers = filterSupersGender(supers, gender)
+	}
+	//Carrega parametro race
+	race := params.Get("race")
+	if race != "" {
+		supers = filterSupersRace(supers, race)
+	}
+	//Carrega parametro eye_color
+	eyeColor := params.Get("eye_color")
+	if eyeColor != "" {
+		supers = filterSupersEyeColor(supers, eyeColor)
+	}
+	//Carrega parametro hair_color
+	hairColor := params.Get("hair_color")
+	if hairColor != "" {
+		supers = filterSupersHairColor(supers, hairColor)
 	}
 	return c.Render(http.StatusOK, r.JSON(supers))
 }
