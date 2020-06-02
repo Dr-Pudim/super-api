@@ -195,19 +195,23 @@ func SupersCreate(c buffalo.Context) error {
 				super.Race = result.Appearance.Race
 			}
 			super.HeightFeet = result.Appearance.Height[0]
-			heightCm, err := convertFirstWordToInt(result.Appearance.Height[1])
-			if err != nil {
-				message := fmt.Sprintf("Erro na conversão do resultado %d", i)
-				return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+			if len(result.Appearance.Height) > 1 {
+				heightCm, err := convertFirstWordToInt(result.Appearance.Height[1])
+				if err != nil {
+					super.HeightCm = 0
+				} else {
+					super.HeightCm = heightCm
+				}
 			}
-			super.HeightCm = heightCm
 			super.WeightLb = result.Appearance.Weight[0]
-			weightKg, err := convertFirstWordToInt(result.Appearance.Weight[1])
-			if err != nil {
-				message := fmt.Sprintf("Erro na conversão do resultado %d", i)
-				return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+			if len(result.Appearance.Weight) > 1 {
+				weightKg, err := convertFirstWordToInt(result.Appearance.Weight[1])
+				if err != nil {
+					super.WeightKg = 0
+				} else {
+					super.WeightKg = weightKg
+				}
 			}
-			super.WeightKg = weightKg
 			if !isNullValue(result.Appearance.EyeColor) {
 				super.EyeColor = result.Appearance.EyeColor
 			}
