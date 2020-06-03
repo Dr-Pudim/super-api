@@ -117,6 +117,21 @@ func filterSupersHairColor(supers []models.Super, name string) []models.Super {
 	return filteredSupers
 }
 
+func filterSupersAlias(supers []models.Super, name string) []models.Super {
+	//Aloca array de supers
+	filteredSupers := []models.Super{}
+	//Para cada super, comparar name
+	for _, super := range supers {
+		for _, alias := range super.Aliases {
+			if stringContainsSubstring(alias.Name, name) {
+				filteredSupers = append(filteredSupers, super)
+				break
+			}
+		}
+	}
+	return filteredSupers
+}
+
 type powerStats struct {
 	Intelligence string `json:"intelligence"`
 	Strength     string `json:"strength"`
@@ -576,6 +591,10 @@ func SupersSearch(c buffalo.Context) error {
 	fullName := params.Get("full_name")
 	if fullName != "" {
 		supers = filterSupersFullName(supers, fullName)
+	}
+	alias := params.Get("alias")
+	if alias != "" {
+		supers = filterSupersAlias(supers, alias)
 	}
 	//Carrega parametro occupation
 	occupation := params.Get("occupation")
