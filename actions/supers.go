@@ -571,7 +571,7 @@ func SupersSearch(c buffalo.Context) error {
 	name := params.Get("name")
 	if name != "" {
 		supers = filterSupersName(supers, name)
-	}ara fi
+	}
 	//Carrega parametro full_name
 	fullName := params.Get("full_name")
 	if fullName != "" {
