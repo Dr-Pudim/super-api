@@ -535,6 +535,11 @@ func SupersSearch(c buffalo.Context) error {
 		}
 		q.Where("weight_kg <= ?", maxWeight)
 	}
+	//Imagem
+	image := params.Get("image")
+	if image != "" {
+		q.Where("image = ?", image)
+	}
 	//Aloca array de supers para receber resultado da query
 	supers := []models.Super{}
 	//Executa query
