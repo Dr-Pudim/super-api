@@ -388,6 +388,35 @@ func SupersCreate(c buffalo.Context) error {
 					}
 				}
 			}
+			//Groups
+			//Separa string de groups
+			firstSplits := strings.Split(result.Connections.GroupAffiliation, ",")
+			//Aloca slice vazio de strings
+			groups := []string{}
+			//Para cada slice em firstSplists, dividir em ";" e adicionar a groups
+			for _, firstSplit := range firstSplits {
+				splits := strings.Split(firstSplit, ";")
+				groups = append(groups, splits...)
+			}
+			//Para cada grupo
+			for _, groupName := range groups {
+				//Se o group for valido
+				if !isNullValue(groupName) {
+					//Retira espaços do inicio e fim
+					groupName := strings.TrimSpace(groupName)
+					//Aloca grupo vazio
+					group := models.Group{}
+					//Confere se o grupo ja existe
+					tx.Where("name = ?", groupName).First(&group)
+					//Se existir, adicionar ao super atual, senão criar novo grupo e adicionar ao super atual
+					if group.Name != "" {
+						super.Groups = append(super.Groups, group)
+					} else {
+						group.Name = groupName
+						super.Groups = append(super.Groups, group)
+					}
+				}
+			}
 			//Valida e cria super
 			tx.Eager().ValidateAndCreate(super)
 			registredSupers = append(registredSupers, *super)
