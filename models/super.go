@@ -39,6 +39,7 @@ type Super struct {
 	Durability      int       `json:"durability" db:"durability"`
 	Power           int       `json:"power" db:"power"`
 	Combat          int       `json:"combat" db:"combat"`
+	Aliases         aliases   `many_to_many:"supers_aliases" json:"aliases"`
 }
 
 // String is not required by pop and may be deleted
