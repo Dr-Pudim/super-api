@@ -351,6 +351,12 @@ func SupersCreate(c buffalo.Context) error {
 			} else {
 				super.Combat = combat
 			}
+			//Aliases
+			super.Aliases = []models.Alias{}
+			for _, aliasName := range result.Biography.Aliases {
+				alias := models.Alias{Name: aliasName}
+				super.Aliases = append(super.Aliases, alias)
+			}
 			//Valida e cria super
 			tx.ValidateAndCreate(super)
 			registredSupers = append(registredSupers, *super)
