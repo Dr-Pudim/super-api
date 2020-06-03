@@ -351,14 +351,30 @@ func SupersCreate(c buffalo.Context) error {
 			} else {
 				super.Combat = combat
 			}
-			//Aliases
-			super.Aliases = []models.Alias{}
-			for _, aliasName := range result.Biography.Aliases {
-				alias := models.Alias{Name: aliasName}
-				super.Aliases = append(super.Aliases, alias)
+			//Caso o resultado tenha aliases
+			if len(result.Biography.Aliases) > 0 {
+				//Aloca slice vazio de aliases
+				super.Aliases = []models.Alias{}
+				//Para cada alias do resultado
+				for _, aliasName := range result.Biography.Aliases {
+					//Se não for um valor invalido
+					if !isNullValue(aliasName) {
+						//Aloca alias vazio
+						alias := models.Alias{}
+						//Confere se alias ja existe
+						tx.Where("name = ?", aliasName).First(&alias)
+						//Se existir, adicionar ao super atual, senão criar novo alias e adicionar ao super atual
+						if alias.Name != "" {
+							super.Aliases = append(super.Aliases, alias)
+						} else {
+							alias.Name = aliasName
+							super.Aliases = append(super.Aliases, alias)
+						}
+					}
+				}
 			}
 			//Valida e cria super
-			tx.ValidateAndCreate(super)
+			tx.Eager().ValidateAndCreate(super)
 			registredSupers = append(registredSupers, *super)
 		}
 	}
@@ -375,7 +391,7 @@ func SupersAll(c buffalo.Context) error {
 	//Cria variavel para receber supers
 	supers := &models.Supers{}
 	//Executa query para pegar todos os supers
-	tx.All(supers)
+	tx.Eager().All(supers)
 	//Renderiza json
 	return c.Render(http.StatusOK, r.JSON(supers))
 }
@@ -392,7 +408,7 @@ func SupersHeros(c buffalo.Context) error {
 	//Cria query que seleciona apenas supers que são herois
 	q := tx.Where("alignment = ?", "good")
 	//Executa query
-	q.All(supers)
+	q.Eager().All(supers)
 	//Renderiza json
 	return c.Render(http.StatusOK, r.JSON(supers))
 }
@@ -409,7 +425,7 @@ func SupersVillains(c buffalo.Context) error {
 	//Cria query que seleciona apenas supers que são vilões
 	q := tx.Where("alignment = ?", "bad")
 	//Executa query
-	q.All(supers)
+	q.Eager().All(supers)
 	//Renderiza json
 	return c.Render(http.StatusOK, r.JSON(supers))
 }
@@ -549,13 +565,13 @@ func SupersSearch(c buffalo.Context) error {
 	//Aloca array de supers para receber resultado da query
 	supers := []models.Super{}
 	//Executa query
-	q.All(&supers)
-	//Confere parametros para filtrar resultado da query
+	q.Eager().All(&supers)
+	//Confere parametros pltrar resultado da query
 	//Carrega parametro name
 	name := params.Get("name")
 	if name != "" {
 		supers = filterSupersName(supers, name)
-	}
+	}ara fi
 	//Carrega parametro full_name
 	fullName := params.Get("full_name")
 	if fullName != "" {
