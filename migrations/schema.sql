@@ -84,11 +84,34 @@ CREATE TABLE public.supers (
 ALTER TABLE public.supers OWNER TO postgres;
 
 --
+-- Name: supers_aliases; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.supers_aliases (
+    id uuid NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    super_id uuid NOT NULL,
+    alias_id uuid NOT NULL
+);
+
+
+ALTER TABLE public.supers_aliases OWNER TO postgres;
+
+--
 -- Name: aliases aliases_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.aliases
     ADD CONSTRAINT aliases_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: supers_aliases supers_aliases_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.supers_aliases
+    ADD CONSTRAINT supers_aliases_pkey PRIMARY KEY (id);
 
 
 --
