@@ -566,7 +566,7 @@ func SupersSearch(c buffalo.Context) error {
 	supers := []models.Super{}
 	//Executa query
 	q.Eager().All(&supers)
-	//Confere parametros pltrar resultado da query
+	//Confere parametros para filtrar resultado da query
 	//Carrega parametro name
 	name := params.Get("name")
 	if name != "" {
