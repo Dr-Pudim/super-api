@@ -21,6 +21,20 @@ SET default_tablespace = '';
 SET default_table_access_method = heap;
 
 --
+-- Name: aliases; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.aliases (
+    id uuid NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    name character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.aliases OWNER TO postgres;
+
+--
 -- Name: schema_migration; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -68,6 +82,14 @@ CREATE TABLE public.supers (
 
 
 ALTER TABLE public.supers OWNER TO postgres;
+
+--
+-- Name: aliases aliases_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.aliases
+    ADD CONSTRAINT aliases_pkey PRIMARY KEY (id);
+
 
 --
 -- Name: supers supers_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
