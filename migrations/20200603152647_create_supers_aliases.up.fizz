@@ -1,0 +1,6 @@
+create_table("supers_aliases") {
+	t.Column("id", "uuid", {primary: true})
+	t.Timestamps()
+    t.Column("super_id", "uuid")
+    t.Column("alias_id", "uuid")
+}
