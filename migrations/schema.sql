@@ -35,6 +35,20 @@ CREATE TABLE public.aliases (
 ALTER TABLE public.aliases OWNER TO postgres;
 
 --
+-- Name: groups; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.groups (
+    id uuid NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    name character varying(255) NOT NULL
+);
+
+
+ALTER TABLE public.groups OWNER TO postgres;
+
+--
 -- Name: schema_migration; Type: TABLE; Schema: public; Owner: postgres
 --
 
@@ -99,6 +113,21 @@ CREATE TABLE public.supers_aliases (
 ALTER TABLE public.supers_aliases OWNER TO postgres;
 
 --
+-- Name: supers_groups; Type: TABLE; Schema: public; Owner: postgres
+--
+
+CREATE TABLE public.supers_groups (
+    id uuid NOT NULL,
+    created_at timestamp without time zone NOT NULL,
+    updated_at timestamp without time zone NOT NULL,
+    super_id uuid NOT NULL,
+    group_id uuid NOT NULL
+);
+
+
+ALTER TABLE public.supers_groups OWNER TO postgres;
+
+--
 -- Name: aliases aliases_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
@@ -107,11 +136,27 @@ ALTER TABLE ONLY public.aliases
 
 
 --
+-- Name: groups groups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.groups
+    ADD CONSTRAINT groups_pkey PRIMARY KEY (id);
+
+
+--
 -- Name: supers_aliases supers_aliases_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
 --
 
 ALTER TABLE ONLY public.supers_aliases
     ADD CONSTRAINT supers_aliases_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: supers_groups supers_groups_pkey; Type: CONSTRAINT; Schema: public; Owner: postgres
+--
+
+ALTER TABLE ONLY public.supers_groups
+    ADD CONSTRAINT supers_groups_pkey PRIMARY KEY (id);
 
 
 --
