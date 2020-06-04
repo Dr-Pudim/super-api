@@ -41,6 +41,7 @@ type Super struct {
 	Combat          int       `json:"combat" db:"combat"`
 	Aliases         aliases   `many_to_many:"supers_aliases" json:"aliases"`
 	Groups          Groups    `many_to_many:"supers_groups" json:"groups"`
+	Relatives       Relatives `many_to_many:"supers_relatives" json:"relatives"`
 }
 
 // String is not required by pop and may be deleted
