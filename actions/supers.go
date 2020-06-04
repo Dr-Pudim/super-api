@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"net/http"
 	"os"
+	"regexp"
 	"strconv"
 	"strings"
 	"super_api/models"
@@ -13,6 +14,10 @@ import (
 	"github.com/gobuffalo/buffalo"
 	"github.com/gobuffalo/pop/v5"
 )
+
+const relativeNameRegex = `[^,\(\)]*`
+const relativeRelationRegex = `(\([^\)]*\))?`
+const relativeRegex = relativeNameRegex + relativeRelationRegex
 
 func isNullValue(s string) bool {
 	if s == "null" || s == "-" || s == "" {
@@ -414,6 +419,33 @@ func SupersCreate(c buffalo.Context) error {
 					} else {
 						group.Name = groupName
 						super.Groups = append(super.Groups, group)
+					}
+				}
+			}
+			//Relatives
+			//Se possuir valor valido
+			if !isNullValue(result.Connections.Relatives) {
+				//Aloca slice vazio de relatives
+				super.Relatives = []models.Relative{}
+				re := regexp.MustCompile(relativeRegex)
+				relativesStrings := re.FindAllString(result.Connections.Relatives, -1)
+				//Para cada relative achado na expressão regular
+				for _, relativeString := range relativesStrings {
+					//Se o relative for valido
+					if !isNullValue(relativeString) {
+						//Aloca relative vazio
+						relative := models.Relative{}
+						//Retira espaços do inicio e fim
+						relativeString := strings.TrimSpace(relativeString)
+						//Confere se o relative ja existe
+						tx.Where("name = ?", relativeString).First(&relative)
+						//Se existir, adicionar ao super atual, senão criar antes de adicionar
+						if relative.Name != "" {
+							super.Relatives = append(super.Relatives, relative)
+						} else {
+							relative.Name = relativeString
+							super.Relatives = append(super.Relatives, relative)
+						}
 					}
 				}
 			}
