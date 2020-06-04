@@ -137,6 +137,36 @@ func filterSupersAlias(supers []models.Super, name string) []models.Super {
 	return filteredSupers
 }
 
+func filterSupersGroup(supers []models.Super, name string) []models.Super {
+	//Aloca array de supers
+	filteredSupers := []models.Super{}
+	//Para cada super, comparar name
+	for _, super := range supers {
+		for _, group := range super.Groups {
+			if stringContainsSubstring(group.Name, name) {
+				filteredSupers = append(filteredSupers, super)
+				break
+			}
+		}
+	}
+	return filteredSupers
+}
+
+func filterSupersRelative(supers []models.Super, name string) []models.Super {
+	//Aloca array de supers
+	filteredSupers := []models.Super{}
+	//Para cada super, comparar name
+	for _, super := range supers {
+		for _, relative := range super.Relatives {
+			if stringContainsSubstring(relative.Name, name) {
+				filteredSupers = append(filteredSupers, super)
+				break
+			}
+		}
+	}
+	return filteredSupers
+}
+
 type powerStats struct {
 	Intelligence string `json:"intelligence"`
 	Strength     string `json:"strength"`
@@ -653,9 +683,20 @@ func SupersSearch(c buffalo.Context) error {
 	if fullName != "" {
 		supers = filterSupersFullName(supers, fullName)
 	}
+	//Carrega parametro alias
 	alias := params.Get("alias")
 	if alias != "" {
 		supers = filterSupersAlias(supers, alias)
+	}
+	//Carrega parametro group
+	group := params.Get("group")
+	if group != "" {
+		supers = filterSupersGroup(supers, group)
+	}
+	//Carega parametro relative
+	relative := params.Get("relative")
+	if relative != "" {
+		supers = filterSupersRelative(supers, relative)
 	}
 	//Carrega parametro occupation
 	occupation := params.Get("occupation")
