@@ -241,7 +241,7 @@ func SupersCreate(c buffalo.Context) error {
 	resp, err := http.Get(url)
 	//Tratamento de erro da chamada
 	if err != nil {
-		return c.Render(http.StatusOK, r.JSON(map[string]string{"message": "Erro na chamada a superheroapi"}))
+		return c.Render(http.StatusInternalServerError, r.JSON(map[string]string{"message": "Erro na chamada a superheroapi"}))
 	}
 	//Adiciona fechamento da resposta a pilha do defer
 	defer resp.Body.Close()
@@ -249,17 +249,17 @@ func SupersCreate(c buffalo.Context) error {
 	respByte, err := ioutil.ReadAll(resp.Body)
 	//Tratamento de erro da leitura de resposta
 	if err != nil {
-		return c.Render(http.StatusOK, r.JSON(map[string]string{"message": "Erro na leitura da resposta"}))
+		return c.Render(http.StatusInternalServerError, r.JSON(map[string]string{"message": "Erro na leitura da resposta"}))
 	}
 	//Cria variavel para json de resposta e deserializa respByte
 	var searchResponse SearchResponse
 	err = json.Unmarshal(respByte, &searchResponse)
 	//Tratamento de erro da deserialização
 	if err != nil {
-		return c.Render(http.StatusOK, r.JSON(map[string]string{"message": "Erro na conversão de Json"}))
+		return c.Render(http.StatusInternalServerError, r.JSON(map[string]string{"message": "Erro na conversão de Json"}))
 	}
 	if searchResponse.Response == "error" {
-		return c.Render(http.StatusOK, r.JSON(searchResponse))
+		return c.Render(http.StatusInternalServerError, r.JSON(searchResponse))
 	}
 	//Pega conexão ao banco de dados do contexto
 	tx, ok := c.Value("tx").(*pop.Connection)
@@ -275,7 +275,7 @@ func SupersCreate(c buffalo.Context) error {
 		//Tratamento de erro da conversão
 		if err != nil {
 			message := fmt.Sprintf("Erro na conversão do resultado %d", i)
-			return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+			return c.Render(http.StatusInternalServerError, r.JSON(map[string]string{"message": message}))
 		}
 		//Adiciona id a slice
 		resultsIDS = append(resultsIDS, originalID)
@@ -299,7 +299,7 @@ func SupersCreate(c buffalo.Context) error {
 		//Tratamento de erro da conversão
 		if err != nil {
 			message := fmt.Sprintf("Erro na conversão do resultado %d", i)
-			return c.Render(http.StatusOK, r.JSON(map[string]string{"message": message}))
+			return c.Render(http.StatusInternalServerError, r.JSON(map[string]string{"message": message}))
 		}
 		//Para cada id da superapi achado no bando de dados, confere se o resultado atual possui o mesmo id
 		for _, superOnDB := range supersAlreadyOnDB {
@@ -484,7 +484,7 @@ func SupersCreate(c buffalo.Context) error {
 			registredSupers = append(registredSupers, *super)
 		}
 	}
-	return c.Render(http.StatusOK, r.JSON(registredSupers))
+	return c.Render(http.StatusCreated, r.JSON(registredSupers))
 }
 
 //SupersAll lista todos os supers registrados
