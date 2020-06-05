@@ -233,7 +233,7 @@ func SupersCreate(c buffalo.Context) error {
 	param := c.Param("name")
 	//Se não houver o parametro name, retornar mensagem
 	if param == "" {
-		return c.Render(http.StatusOK, r.JSON(map[string]string{"message": "Sem parametro name para buscar"}))
+		return c.Render(http.StatusBadRequest, r.JSON(map[string]string{"message": "Sem parametro name para buscar"}))
 	}
 	//Gera url de pesquisa para consultar a superheroapi
 	url := fmt.Sprintf("https://superheroapi.com/api/%s/search/%s", os.Getenv("SUPERHEROAPI_ACCESS_TOKEN"), param)
