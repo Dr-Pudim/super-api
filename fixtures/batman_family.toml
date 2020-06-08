@@ -1,0 +1,305 @@
+[[scenario]]
+name = "Bat Family"
+
+    [[scenario.table]]
+    name = "supers"
+
+        [[scenario.table.row]]
+        id = '<%= uuidNamed("super") %>'
+        created_at = "<%= now() %>"
+        updated_at = "<%= now() %>"
+        original_id = 63
+        name = "Batgirl"
+        full_name = "Barbara Gordon"
+        place_of_birth = ""
+        first_appearance = "Detective Comics #359"
+        alter_egos = "Oracle"
+        publisher = "Oracle"
+        alignment = "good"
+        gender = "Female"
+        race = "Human"
+        height_feet = "5'7"
+        height_cm = 170
+        weight_lb = "126 lb"
+        weight_kg = 57
+        eye_color = "Green"
+        hair_color = "Red"
+        occupation = ""
+        base = "Gotham City, formerly Metropolis, Platinum Flats"
+        image = "https://www.superherodb.com/pictures2/portraits/10/100/1111.jpg"
+        intelligence = 88
+        strength = 11
+        speed = 33
+        durability = 40
+        power = 34
+        combat = 90
+
+        [[scenario.table.row]]
+        id = '<%= uuidNamed("super") %>'
+        created_at = "<%= now() %>"
+        updated_at = "<%= now() %>"
+        original_id = 64
+        name = "Batgirl"
+        full_name = "Mary Elizabeth Kane"
+        place_of_birth = ""
+        first_appearance = "Batman #139"
+        alter_egos = "Hawkfire"
+        publisher = "Hawkfire"
+        alignment = "good"
+        gender = "Female"
+        race = ""
+        height_feet = "-"
+        height_cm = 0
+        weight_lb = "- lb"
+        weight_kg  = 0
+        eye_color = ""
+        hair_color = ""
+        occupation = "Crime-fighter"
+        base = "Gotham City"
+        image = "https://www.superherodb.com/pictures2/portraits/10/100/638.jpg"
+        intelligence = 0
+        strength = 27
+        speed = 0
+        durability = 0
+        power = 0
+        combat = 0
+
+        [[scenario.table.row]]
+        id = '<%= uuidNamed("super") %>'
+        created_at = "<%= now() %>"
+        updated_at = "<%= now() %>"
+        original_id = 65
+        name = "Batgirl III"
+        full_name = "Helena Rosa Bertinelli"
+        place_of_birth = ""
+        first_appearance = ""
+        alter_egos = "Huntress"
+        publisher = "Huntress"
+        alignment = "good"
+        gender = "Female"
+        race = ""
+        height_feet = "-"
+        height_cm = 0
+        weight_lb = "- lb"
+        weight_kg = 0
+        eye_color = ""
+        hair_color = ""
+        occupation = ""
+        base = ""
+        image = "https://www.superherodb.com/pictures2/portraits/10/100/1112.jpg"
+        intelligence = 0
+        strength = 43
+        speed = 0
+        durability = 0
+        power = 0
+        combat = 0
+
+        [[scenario.table.row]]
+        id = '<%= uuidNamed("super") %>'
+        created_at = "<%= now() %>"
+        updated_at = "<%= now() %>"
+        original_id = 66
+        name = "Batgirl IV"
+        full_name = "Cassandra Cain"
+        place_of_birth = "League of Assassins (exact base is unknown)"
+        first_appearance = "Batman: Legends of the Dark Knight #120"
+        alter_egos = "No alter egos found."
+        publisher = "DC Comics"
+        alignment = "good"
+        gender = "Female"
+        race = "Human"
+        height_feet = "5'5"
+        height_cm = 165
+        weight_lb = "115 lb"
+        weight_kg = 52
+        eye_color = "Green"
+        hair_color = "Black"
+        occupation = ""
+        base = "Gotham City; Bl�dhaven; Tibet; New York City"
+        image = "https://www.superherodb.com/pictures2/portraits/10/100/1113.jpg"
+        intelligence = 69
+        strength = 12
+        speed = 27
+        durability = 56
+        power = 46
+        combat = 100
+
+        [[scenario.table.row]]
+        id = '<%= uuidNamed("super") %>'
+        created_at = "<%= now() %>"
+        updated_at = "<%= now() %>"
+        original_id = 67
+        name = "Batgirl V"
+        full_name = "Charlotte Gage-Radcliffe"
+        place_of_birth = ""
+        first_appearance = ""
+        alter_egos = "Misfit"
+        publisher = "Misfit"
+        alignment = "good"
+        gender = "Female"
+        race = ""
+        height_feet = "-"
+        height_cm = 0
+        weight_lb = "- lb"
+        weight_kg = 0
+        eye_color = ""
+        hair_color = ""
+        occupation = ""
+        base = ""
+        image = "https://www.superherodb.com/pictures2/portraits/10/100/1115.jpg"
+        intelligence = 0
+        strength = 0
+        speed = 0
+        durability = 0
+        power = 0
+        combat = 0
+
+        [[scenario.table.row]]
+        id = '<%= uuidNamed("super") %>'
+        created_at = "<%= now() %>"
+        updated_at = "<%= now() %>"
+        original_id = 68
+        name = "Batgirl VI"
+        full_name = "Stephanie Brown"
+        place_of_birth = ""
+        first_appearance = "Detective Comics #647. As Batgirl in Batgirl (Volume 3) #1. (2009)"
+        alter_egos = "Spoiler"
+        publisher = "Spoiler"
+        alignment = "good"
+        gender = "Female"
+        race = ""
+        height_feet = "5'6"
+        height_cm = 168
+        weight_lb = "135 lb"
+        weight_kg = 61
+        eye_color = "Blue"
+        hair_color = "Blond"
+        occupation = "College student at Gotham University"
+        base = "Gotham Heights, Gotham City"
+        image = "https://www.superherodb.com/pictures2/portraits/10/100/1398.jpg"
+        intelligence = 75
+        strength = 10
+        speed = 23
+        durability = 28
+        power = 22
+        combat = 80
+
+        [[scenario.table.row]]
+        id = '<%= uuidNamed("super") %>'
+        created_at = "<%= now() %>"
+        updated_at = "<%= now() %>"
+        original_id = 69
+        name = "Batman"
+        full_name = "Terry McGinnis"
+        place_of_birth = "Gotham City, 25th Century"
+        first_appearance = "Batman Beyond #1"
+        alter_egos = "No alter egos found."
+        publisher = "DC Comics"
+        alignment = "good"
+        gender = "Male"
+        race = "Human"
+        height_feet = "5'10"
+        height_cm = 178
+        weight_lb = "170 lb"
+        weight_kg = 77
+        eye_color = "Blue"
+        hair_color = "Black"
+        occupation = ""
+        base = "21st Century Gotham City"
+        image = "https://www.superherodb.com/pictures2/portraits/10/100/10441.jpg"
+        intelligence = 81
+        strength = 40
+        speed = 29
+        durability = 55
+        power = 63
+        combat = 90
+
+        [[scenario.table.row]]
+        id = '<%= uuidNamed("super") %>'
+        created_at = "<%= now() %>"
+        updated_at = "<%= now() %>"
+        original_id = 70
+        name = "Batman"
+        full_name = "Bruce Wayne"
+        place_of_birth = "Crest Hill, Bristol Township; Gotham County"
+        first_appearance = "Detective Comics #27"
+        alter_egos = "No alter egos found."
+        publisher = "DC Comics"
+        alignment = "good"
+        gender = "Male"
+        race = "Human"
+        height_feet = "6'2"
+        height_cm = 188
+        weight_lb = "210 lb"
+        weight_kg = 95
+        eye_color = "blue"
+        hair_color = "black"
+        occupation = "Businessman"
+        base = "Batcave, Stately Wayne Manor, Gotham City; Hall of Justice, Justice League Watchtower"
+        image = "https://www.superherodb.com/pictures2/portraits/10/100/639.jpg"
+        intelligence = 100
+        strength = 26
+        speed = 27
+        durability = 50
+        power = 47
+        combat = 100
+
+        [[scenario.table.row]]
+        id = '<%= uuidNamed("super") %>'
+        created_at = "<%= now() %>"
+        updated_at = "<%= now() %>"
+        original_id = 71
+        name = "Batman II"
+        full_name = "Dick Grayson"
+        place_of_birth = ""
+        first_appearance = ""
+        alter_egos = "Nightwing, Robin"
+        publisher = "Nightwing"
+        alignment = "good"
+        gender = "Male"
+        race = "Human"
+        height_feet = "5'10"
+        height_cm = 178
+        weight_lb = "175 lb"
+        weight_kg = 79
+        eye_color = "Blue"
+        hair_color = "Black"
+        occupation = ""
+        base = "Gotham City; formerly Bludhaven, New York City"
+        image = "https://www.superherodb.com/pictures2/portraits/10/100/1496.jpg"
+        intelligence = 88
+        strength = 11
+        speed = 33
+        durability = 28
+        power = 36
+        combat = 100
+
+        [[scenario.table.row]]
+        id = '<%= uuidNamed("super") %>'
+        created_at = "<%= now() %>"
+        updated_at = "<%= now() %>"
+        original_id = 73
+        name = "Batwoman V"
+        full_name = "Katherine Rebecca Kane"
+        place_of_birth = ""
+        first_appearance = "52 #7 (June, 2006)"
+        alter_egos = "No alter egos found."
+        publisher = "DC Comics"
+        alignment = "good"
+        gender = "Female"
+        race = "Human"
+        height_feet = "5'10"
+        height_cm = 178
+        weight_lb = "- lb"
+        weight_kg = 0
+        eye_color = "Green"
+        hair_color = "Red"
+        occupation = ""
+        base = "Gotham City"
+        image = "https://www.superherodb.com/pictures2/portraits/10/100/10234.jpg"
+        intelligence = 81
+        strength = 8
+        speed = 29
+        durability = 25
+        power = 27
+        combat = 80
