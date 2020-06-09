@@ -214,3 +214,24 @@ func (as *ActionSuite) Test_Supers_Heros() {
 		as.Require().Equal("good", strings.ToLower(super.Alignment), fmt.Sprintf(`Essa ação só deveria retornar supers com o aligment "good", mas retornou o super "%s" que possui aligment "%s"`, super.Name, strings.ToLower(super.Alignment)))
 	}
 }
+
+func (as *ActionSuite) Test_Supers_Villains() {
+	//Carrega fixtures
+	as.LoadFixture("Bat Family")
+	as.LoadFixture("Batman Villains")
+	//Constante com numero de vilões nas fixtures
+	const villainNumber = 3
+	//Executa chamada a rota
+	res := as.JSON("/villains").Get()
+	//Confere codigo de resposta
+	as.Require().Equal(http.StatusOK, res.Code, fmt.Sprintf("Codigo de resposta inesperado: %d Esperava: %d", res.Code, http.StatusOK))
+	//Carrega supers do json
+	supers := []models.Super{}
+	json.Unmarshal(res.Body.Bytes(), &supers)
+	//Confere numero de resultados
+	as.Assert().Equal(villainNumber, len(supers), fmt.Sprintf("Esperava encontrar %d supers, mas encontrou %d", villainNumber, len(supers)))
+	//Para cada super, testa de aligment é good
+	for _, super := range supers {
+		as.Require().Equal("bad", strings.ToLower(super.Alignment), fmt.Sprintf(`Essa ação só deveria retornar supers com o aligment "bad", mas retornou o super "%s" que possui aligment "%s"`, super.Name, strings.ToLower(super.Alignment)))
+	}
+}
