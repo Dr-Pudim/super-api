@@ -5,7 +5,7 @@ name = "Bat Family"
     name = "supers"
 
         [[scenario.table.row]]
-        id = '<%= uuidNamed("super") %>'
+        id = "<%= uuid() %>"
         created_at = "<%= now() %>"
         updated_at = "<%= now() %>"
         original_id = 63
@@ -35,7 +35,7 @@ name = "Bat Family"
         combat = 90
 
         [[scenario.table.row]]
-        id = '<%= uuidNamed("super") %>'
+        id = "<%= uuid() %>"
         created_at = "<%= now() %>"
         updated_at = "<%= now() %>"
         original_id = 64
@@ -65,7 +65,7 @@ name = "Bat Family"
         combat = 0
 
         [[scenario.table.row]]
-        id = '<%= uuidNamed("super") %>'
+        id = "<%= uuid() %>"
         created_at = "<%= now() %>"
         updated_at = "<%= now() %>"
         original_id = 65
@@ -95,7 +95,7 @@ name = "Bat Family"
         combat = 0
 
         [[scenario.table.row]]
-        id = '<%= uuidNamed("super") %>'
+        id = "<%= uuid() %>"
         created_at = "<%= now() %>"
         updated_at = "<%= now() %>"
         original_id = 66
@@ -125,7 +125,7 @@ name = "Bat Family"
         combat = 100
 
         [[scenario.table.row]]
-        id = '<%= uuidNamed("super") %>'
+        id = "<%= uuid() %>"
         created_at = "<%= now() %>"
         updated_at = "<%= now() %>"
         original_id = 67
@@ -155,7 +155,7 @@ name = "Bat Family"
         combat = 0
 
         [[scenario.table.row]]
-        id = '<%= uuidNamed("super") %>'
+        id = "<%= uuid() %>"
         created_at = "<%= now() %>"
         updated_at = "<%= now() %>"
         original_id = 68
@@ -185,7 +185,7 @@ name = "Bat Family"
         combat = 80
 
         [[scenario.table.row]]
-        id = '<%= uuidNamed("super") %>'
+        id = "<%= uuid() %>"
         created_at = "<%= now() %>"
         updated_at = "<%= now() %>"
         original_id = 69
@@ -215,7 +215,7 @@ name = "Bat Family"
         combat = 90
 
         [[scenario.table.row]]
-        id = '<%= uuidNamed("super") %>'
+        id = "<%= uuid() %>"
         created_at = "<%= now() %>"
         updated_at = "<%= now() %>"
         original_id = 70
@@ -245,7 +245,7 @@ name = "Bat Family"
         combat = 100
 
         [[scenario.table.row]]
-        id = '<%= uuidNamed("super") %>'
+        id = "<%= uuid() %>"
         created_at = "<%= now() %>"
         updated_at = "<%= now() %>"
         original_id = 71
@@ -275,7 +275,7 @@ name = "Bat Family"
         combat = 100
 
         [[scenario.table.row]]
-        id = '<%= uuidNamed("super") %>'
+        id = "<%= uuid() %>"
         created_at = "<%= now() %>"
         updated_at = "<%= now() %>"
         original_id = 73
