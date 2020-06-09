@@ -1,0 +1,95 @@
+[[scenario]]
+name = "Batman Villains"
+
+    [[scenario.table]]
+    name = "supers"
+
+        [[scenario.table.row]]
+        id = "<%= uuid() %>"
+        created_at = "<%= now() %>"
+        updated_at = "<%= now() %>"
+        original_id = 576
+        name = "Scarecrow"
+        full_name = "Jonathan Crane"
+        place_of_birth = ""
+        first_appearance = "WORLD'S FINEST COMICS #3 (Fall, 1941)"
+        alter_egos = "No alter egos found."
+        publisher = "DC Comics"
+        alignment = "bad"
+        gender = "Male"
+        race = "Human"
+        height_feet = "6'0"
+        height_cm = 183
+        weight_lb = "140 lb"
+        weight_kg = 63
+        eye_color = "Blue"
+        hair_color = "Brown"
+        occupation = "Special Professional Criminal"
+        base = "Gotham City"
+        image = "https://www.superherodb.com/pictures2/portraits/10/100/819.jpg"
+        intelligence = 81
+        strength = 10
+        speed = 12
+        durability = 14
+        power = 48
+        combat = 50
+
+        [[scenario.table.row]]
+        id = "<%= uuid() %>"
+        created_at = "<%= now() %>"
+        updated_at = "<%= now() %>"
+        original_id = 370
+        name = "Joker"
+        full_name = "Jack Napier"
+        place_of_birth = ""
+        first_appearance = "Batman #1 (Spring 1940)"
+        alter_egos = "No alter egos found."
+        publisher = "DC Comics"
+        alignment = "bad"
+        gender = "Male"
+        race = "Human"
+        height_feet = "6'5"
+        height_cm = 196
+        weight_lb = "192 lb"
+        weight_kg = 86
+        eye_color = "Green"
+        hair_color = "Green"
+        occupation = ""
+        base = "Arkham Asylum, Gotham City; Ha-Hacienda"
+        image = "https://www.superherodb.com/pictures2/portraits/10/100/719.jpg"
+        intelligence = 100
+        strength = 10
+        speed = 12
+        durability = 60
+        power = 43
+        combat = 70
+
+        [[scenario.table.row]]
+        id = "<%= uuid() %>"
+        created_at = "<%= now() %>"
+        updated_at = "<%= now() %>"
+        original_id = 457
+        name = "Mister Freeze"
+        full_name = "Victor Fries"
+        place_of_birth = ""
+        first_appearance = "Batman #121 (Feb. 1959)"
+        alter_egos = "No alter egos found."
+        publisher = "DC Comics"
+        alignment = "bad"
+        gender = "Male"
+        race = "Human"
+        height_feet = "6'0"
+        height_cm = 183
+        weight_lb = "190 lb"
+        weight_kg = 86
+        eye_color = ""
+        hair_color = ""
+        occupation = ""
+        base = ""
+        image = "https://www.superherodb.com/pictures2/portraits/10/100/742.jpg"
+        intelligence = 75
+        strength = 32
+        speed = 12
+        durability = 70
+        power = 37
+        combat = 28
