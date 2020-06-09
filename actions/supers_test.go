@@ -43,9 +43,9 @@ func (as *ActionSuite) Test_Supers_Create() {
 				}
 			}
 			//Testa se o nome foi encontrado
-			as.Assert().Equal(true, fullNameFound, fmt.Sprintf(`Caso de teste %d deveria conter super com "fullname":"%s"`, i, name))
+			assertion := as.Assert().Equal(true, fullNameFound, fmt.Sprintf(`Caso de teste %d deveria conter super com "fullname":"%s"`, i, name))
 			//Se o nome não foi encontrado, acrescentar uma falha
-			if !fullNameFound {
+			if !assertion {
 				containFullNameFails++
 			}
 		}
@@ -57,8 +57,8 @@ func (as *ActionSuite) Test_Supers_Create() {
 					fullNameFound = true
 				}
 			}
-			as.Assert().Equal(false, fullNameFound, fmt.Sprintf(`Caso de teste %d não deveria conter super com "fullname":"%s"`, i, name))
-			if fullNameFound {
+			assertion := as.Assert().Equal(false, fullNameFound, fmt.Sprintf(`Caso de teste %d não deveria conter super com "fullname":"%s"`, i, name))
+			if !assertion {
 				notContainFullNameFails++
 			}
 		}
@@ -103,8 +103,8 @@ func (as *ActionSuite) Test_Supers_Search() {
 				switch tcase.fieldToTest {
 				case "gender":
 					lowerCaseGender := strings.ToLower(super.Gender)
-					as.Assert().Equal(expectedResult, lowerCaseGender, fmt.Sprintf(`Todos os resutlado do caso de teste %d deveriam conter o campo "gender" com valor "%s"`, i, expectedResult))
-					if lowerCaseGender != expectedResult {
+					assertion := as.Assert().Equal(expectedResult, lowerCaseGender, fmt.Sprintf(`Todos os resutlado do caso de teste %d deveriam conter o campo "gender" com valor "%s"`, i, expectedResult))
+					if !assertion {
 						allContainValueFails++
 					}
 				case "intelligence":
@@ -128,8 +128,8 @@ func (as *ActionSuite) Test_Supers_Search() {
 				switch tcase.fieldToTest {
 				case "gender":
 					lowerCaseGender := strings.ToLower(super.Gender)
-					as.Assert().NotEqual(notExpectedResult, lowerCaseGender, fmt.Sprintf(`Todos os resutlado do caso de teste %d *não* deveriam conter o campo "gender" com valor "%s"`, i, notExpectedResult))
-					if lowerCaseGender == notExpectedResult {
+					assertion := as.Assert().NotEqual(notExpectedResult, lowerCaseGender, fmt.Sprintf(`Todos os resutlado do caso de teste %d *não* deveriam conter o campo "gender" com valor "%s"`, i, notExpectedResult))
+					if !assertion {
 						allDontContainValueFails++
 					}
 				}
