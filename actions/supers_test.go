@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
 	"strings"
 	"super_api/models"
 )
@@ -79,6 +80,7 @@ func (as *ActionSuite) Test_Supers_Search() {
 	}{
 		{"gender=male", http.StatusOK, "gender", []string{"male"}, []string{"female"}},
 		{"gender=female", http.StatusOK, "gender", []string{"female"}, []string{"male"}},
+		{"intelligence=70", http.StatusOK, "intelligence", []string{"70"}, []string{}},
 	}
 	//Variaveis para contar falhas
 	allContainValueFails := 0
@@ -103,6 +105,15 @@ func (as *ActionSuite) Test_Supers_Search() {
 					lowerCaseGender := strings.ToLower(super.Gender)
 					as.Assert().Equal(expectedResult, lowerCaseGender, fmt.Sprintf(`Todos os resutlado do caso de teste %d deveriam conter o campo "gender" com valor "%s"`, i, expectedResult))
 					if lowerCaseGender != expectedResult {
+						allContainValueFails++
+					}
+				case "intelligence":
+					expectedIntelligence, err := strconv.Atoi(expectedResult)
+					if err != nil {
+						as.Fail(fmt.Sprintf(`Erro na conversão do valor do campo Intelligence do super: %s`, super.Name))
+					}
+					assertion := as.Assert().GreaterOrEqual(super.Intelligence, expectedIntelligence, fmt.Sprintf(`Todos os resultados do caso de teste %d deveriam conter intelligence iqual ou maior que %d`, i, expectedIntelligence))
+					if !assertion {
 						allContainValueFails++
 					}
 				}
