@@ -202,6 +202,8 @@ func (as *ActionSuite) Test_Supers_Heros() {
 	//Carrega fixtures
 	as.LoadFixture("Bat Family")
 	as.LoadFixture("Batman Villains")
+	//Constante com numero de herois nas fixtures
+	const heroNumber = 10
 	//Executa chamada a rota
 	res := as.JSON("/heros").Get()
 	//Confere codigo de resposta
@@ -213,6 +215,8 @@ func (as *ActionSuite) Test_Supers_Heros() {
 	for _, super := range supers {
 		as.Require().Equal("good", strings.ToLower(super.Alignment), fmt.Sprintf(`Essa ação só deveria retornar supers com o aligment "good", mas retornou o super "%s" que possui aligment "%s"`, super.Name, strings.ToLower(super.Alignment)))
 	}
+	//Confere numero de herois
+	as.Assert().Equal(heroNumber, len(supers), fmt.Sprintf("Esperava encontrar %d supers, mas encontrou %d", heroNumber, len(supers)))
 }
 
 func (as *ActionSuite) Test_Supers_Villains() {
