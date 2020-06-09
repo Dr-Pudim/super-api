@@ -24,6 +24,7 @@ func (as *ActionSuite) Test_Supers_Create() {
 	//Variaveis para contar falhas
 	containFullNameFails := 0
 	notContainFullNameFails := 0
+	superOnDBFails := 0
 	//Para cada caso de teste
 	for i, tcase := range tcases {
 		//Fazer chamada a api
@@ -62,9 +63,32 @@ func (as *ActionSuite) Test_Supers_Create() {
 				notContainFullNameFails++
 			}
 		}
+		//Confere se os supers foram criados no banco de dados
+		//Variavel para argumentos de where
+		var supersToFindDB []interface{}
+		supersToFindDB = append(supersToFindDB, tcase.containFullName)
+		//Variavel para supers encontrados
+		supersFoundOnDB := []models.Super{}
+		//Executa query
+		as.DB.Where("full_name in (?)", supersToFindDB...).All(&supersFoundOnDB)
+		//Para cada resultado esperado
+		for _, expectedFullName := range tcase.containFullName {
+			superFound := false
+			//Para cada resultado da query
+			for _, super := range supersFoundOnDB {
+				if super.FullName == expectedFullName {
+					superFound = true
+					break
+				}
+			}
+			assertion := as.Assert().True(superFound, `fullname "%s" não encontrado no caso de teste %d`, expectedFullName, i)
+			if !assertion {
+				superOnDBFails++
+			}
+		}
 	}
 	//Se houver qualquer falha, falhar o teste
-	as.Require().Equal(true, containFullNameFails < 1 && notContainFullNameFails < 1, fmt.Sprintf(`Falhas de containFullName:%d Falhas de notContainFullName:%d`, containFullNameFails, notContainFullNameFails))
+	as.Require().Equal(true, containFullNameFails < 1 && notContainFullNameFails < 1 && superOnDBFails < 1, fmt.Sprintf(`Falhas de containFullName:%d Falhas de notContainFullName:%d Falhas de superOnDBFails:%d`, containFullNameFails, notContainFullNameFails, superOnDBFails))
 }
 
 func (as *ActionSuite) Test_Supers_Search() {
