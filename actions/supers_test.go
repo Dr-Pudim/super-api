@@ -81,6 +81,7 @@ func (as *ActionSuite) Test_Supers_Search() {
 		{"gender=male", http.StatusOK, "gender", []string{"male"}, []string{"female"}},
 		{"gender=female", http.StatusOK, "gender", []string{"female"}, []string{"male"}},
 		{"intelligence=70", http.StatusOK, "intelligence", []string{"70"}, []string{}},
+		{"name=batman", http.StatusOK, "name", []string{"batman"}, []string{"batgirl", "batwoman"}},
 	}
 	//Variaveis para contar falhas
 	allContainValueFails := 0
@@ -101,6 +102,13 @@ func (as *ActionSuite) Test_Supers_Search() {
 			for _, super := range response {
 				//Seleciona campo para testar
 				switch tcase.fieldToTest {
+				case "name":
+					expectedName := strings.ToLower(expectedResult)
+					superName := strings.ToLower(super.Name)
+					assertion := as.Assert().Contains(superName, expectedName, fmt.Sprintf(`Todos os resultados do caso de teste %d deveriam conter "%s" no seu name. Name encontrado:"%s"`, i, expectedName, super.Name))
+					if !assertion {
+						allContainValueFails++
+					}
 				case "gender":
 					lowerCaseGender := strings.ToLower(super.Gender)
 					assertion := as.Assert().Equal(expectedResult, lowerCaseGender, fmt.Sprintf(`Todos os resutlado do caso de teste %d deveriam conter o campo "gender" com valor "%s"`, i, expectedResult))
@@ -126,6 +134,13 @@ func (as *ActionSuite) Test_Supers_Search() {
 			for _, super := range response {
 				//Seleciona campo para testar
 				switch tcase.fieldToTest {
+				case "name":
+					notExpectedName := strings.ToLower(notExpectedResult)
+					superName := strings.ToLower(super.Name)
+					assertion := as.Assert().NotContains(superName, notExpectedName, fmt.Sprintf(`Todos os resultados do caso de teste %d não deveriam conter "%s" no seu name. Name encontrado:"%s"`, i, notExpectedName, super.Name))
+					if !assertion {
+						allDontContainValueFails++
+					}
 				case "gender":
 					lowerCaseGender := strings.ToLower(super.Gender)
 					assertion := as.Assert().NotEqual(notExpectedResult, lowerCaseGender, fmt.Sprintf(`Todos os resutlado do caso de teste %d *não* deveriam conter o campo "gender" com valor "%s"`, i, notExpectedResult))
