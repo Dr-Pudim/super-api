@@ -211,12 +211,12 @@ func (as *ActionSuite) Test_Supers_Heros() {
 	//Carrega supers do json
 	supers := []models.Super{}
 	json.Unmarshal(res.Body.Bytes(), &supers)
+	//Confere numero de herois
+	as.Assert().Equal(heroNumber, len(supers), fmt.Sprintf("Esperava encontrar %d supers, mas encontrou %d", heroNumber, len(supers)))
 	//Para cada super, testa de aligment é good
 	for _, super := range supers {
 		as.Require().Equal("good", strings.ToLower(super.Alignment), fmt.Sprintf(`Essa ação só deveria retornar supers com o aligment "good", mas retornou o super "%s" que possui aligment "%s"`, super.Name, strings.ToLower(super.Alignment)))
 	}
-	//Confere numero de herois
-	as.Assert().Equal(heroNumber, len(supers), fmt.Sprintf("Esperava encontrar %d supers, mas encontrou %d", heroNumber, len(supers)))
 }
 
 func (as *ActionSuite) Test_Supers_Villains() {
