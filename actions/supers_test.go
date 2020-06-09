@@ -197,3 +197,20 @@ func (as *ActionSuite) Test_Supers_Destroy() {
 	as.DB.All(&supers)
 	as.Require().Equal(0, len(supers))
 }
+
+func (as *ActionSuite) Test_Supers_Heros() {
+	//Carrega fixtures
+	as.LoadFixture("Bat Family")
+	as.LoadFixture("Batman Villains")
+	//Executa chamada a rota
+	res := as.JSON("/heros").Get()
+	//Confere codigo de resposta
+	as.Require().Equal(http.StatusOK, res.Code, fmt.Sprintf("Codigo de resposta inesperado: %d Esperava: %d", res.Code, http.StatusOK))
+	//Carrega supers do json
+	supers := []models.Super{}
+	json.Unmarshal(res.Body.Bytes(), &supers)
+	//Para cada super, testa de aligment é good
+	for _, super := range supers {
+		as.Require().Equal("good", strings.ToLower(super.Alignment), fmt.Sprintf(`Essa ação só deveria retornar supers com o aligment "good", mas retornou o super "%s" que possui aligment "%s"`, super.Name, strings.ToLower(super.Alignment)))
+	}
+}
