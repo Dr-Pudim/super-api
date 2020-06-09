@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strings"
 	"super_api/models"
 )
 
@@ -63,4 +64,67 @@ func (as *ActionSuite) Test_Supers_Create() {
 	}
 	//Se houver qualquer falha, falhar o teste
 	as.Require().Equal(true, containFullNameFails < 1 && notContainFullNameFails < 1, fmt.Sprintf(`Falhas de containFullName:%d Falhas de notContainFullName:%d`, containFullNameFails, notContainFullNameFails))
+}
+
+func (as *ActionSuite) Test_Supers_Search() {
+	//Carrega fixtures
+	as.LoadFixture("Bat Family")
+	//Struct de casos de teste
+	tcases := []struct {
+		searchParams        string
+		expectedRespCode    int
+		fieldToTest         string
+		allContainValue     []string
+		allDontContainValue []string
+	}{
+		{"gender=male", http.StatusOK, "gender", []string{"male"}, []string{"female"}},
+		{"gender=female", http.StatusOK, "gender", []string{"female"}, []string{"male"}},
+	}
+	//Variaveis para contar falhas
+	allContainValueFails := 0
+	allDontContainValueFails := 0
+	//Para cada caso de teste
+	for i, tcase := range tcases {
+		//Fazer chamada a api
+		res := as.JSON("/search?" + tcase.searchParams).Get()
+		//Conferir codigo de resposta
+		as.Equal(tcase.expectedRespCode, res.Code, fmt.Sprintf(`Codigo de Resposta esperado:%d Codigo de Resposta recebido:%d`, tcase.expectedRespCode, res.Code))
+		//Unmarshal do json
+		response := []models.Super{}
+		json.Unmarshal(res.Body.Bytes(), &response)
+		//Confere se a resposta contem os resultados esperados
+		//Para cada resultado esperado
+		for _, expectedResult := range tcase.allContainValue {
+			//Para cada super da resposta
+			for _, super := range response {
+				//Seleciona campo para testar
+				switch tcase.fieldToTest {
+				case "gender":
+					lowerCaseGender := strings.ToLower(super.Gender)
+					as.Assert().Equal(expectedResult, lowerCaseGender, fmt.Sprintf(`Todos os resutlado do caso de teste %d deveriam conter o campo "gender" com valor "%s"`, i, expectedResult))
+					if lowerCaseGender != expectedResult {
+						allContainValueFails++
+					}
+				}
+			}
+		}
+		//Confere se a resposta contem os resultados *não* esperados
+		//Para cada resultado *não* esperado
+		for _, notExpectedResult := range tcase.allDontContainValue {
+			//Para cada super da resposta
+			for _, super := range response {
+				//Seleciona campo para testar
+				switch tcase.fieldToTest {
+				case "gender":
+					lowerCaseGender := strings.ToLower(super.Gender)
+					as.Assert().NotEqual(notExpectedResult, lowerCaseGender, fmt.Sprintf(`Todos os resutlado do caso de teste %d *não* deveriam conter o campo "gender" com valor "%s"`, i, notExpectedResult))
+					if lowerCaseGender == notExpectedResult {
+						allDontContainValueFails++
+					}
+				}
+			}
+		}
+	}
+	//Se houver qualquer falha, falhar o teste
+	as.Require().Equal(true, allContainValueFails < 1 && allDontContainValueFails < 1, fmt.Sprintf(`Falhas de allContainValueFails:%d Falhas de allDontContainValueFails:%d`, allContainValueFails, allDontContainValueFails))
 }
