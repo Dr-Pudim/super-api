@@ -95,6 +95,7 @@ func (as *ActionSuite) Test_Supers_Create() {
 func (as *ActionSuite) Test_Supers_Search() {
 	//Carrega fixtures
 	as.LoadFixture("Bat Family")
+	as.LoadFixture("Batman Villains")
 	//Struct de casos de teste
 	tcases := []struct {
 		searchParams        string
