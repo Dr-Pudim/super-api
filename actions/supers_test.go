@@ -179,3 +179,21 @@ func (as *ActionSuite) Test_Supers_Search() {
 	//Se houver qualquer falha, falhar o teste
 	as.Require().Equal(true, allContainValueFails < 1 && allDontContainValueFails < 1, fmt.Sprintf(`Falhas de allContainValueFails:%d Falhas de allDontContainValueFails:%d`, allContainValueFails, allDontContainValueFails))
 }
+
+func (as *ActionSuite) Test_Supers_Destroy() {
+	//Carrega fixtures
+	as.LoadFixture("Bat Family")
+	//Carrega supers do banco de dados
+	supers := []models.Super{}
+	as.DB.All(&supers)
+	//Para cada super, executar ação de destruição
+	for _, super := range supers {
+		//Chamada da rota
+		res := as.JSON(fmt.Sprintf("/%s/destroy?super_id=%s", os.Getenv("SUPER_API_KEY"), super.ID)).Get()
+		as.Require().Equal(http.StatusOK, res.Code, fmt.Sprintf("Codigo de Resposta esperado: %d Codigo de Resposta recebido: %d", http.StatusOK, res.Code))
+	}
+	//Confere se o banco de dados esta vazio
+	supers = []models.Super{}
+	as.DB.All(&supers)
+	as.Require().Equal(0, len(supers))
+}
