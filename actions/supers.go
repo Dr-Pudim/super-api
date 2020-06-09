@@ -229,6 +229,14 @@ type SearchResponse struct {
 
 // SupersCreate default implementation.
 func SupersCreate(c buffalo.Context) error {
+	//Confere se a chave de acesso existe e esta correta
+	key := c.Param("key")
+	if key == "" {
+		return c.Render(http.StatusUnauthorized, r.JSON(map[string]string{"message": "Requer chave de acesso"}))
+	}
+	if key != os.Getenv("SUPER_API_KEY") {
+		return c.Render(http.StatusForbidden, r.JSON(map[string]string{"message": "Chave de acesso invalida"}))
+	}
 	//Lê nome no parametro da rota
 	param := c.Param("name")
 	//Se não houver o parametro name, retornar mensagem
@@ -538,6 +546,14 @@ func SupersVillains(c buffalo.Context) error {
 
 //SupersDestroy deleta do banco de dados o super cujo id é passado pelo parametro "super_id"
 func SupersDestroy(c buffalo.Context) error {
+	//Confere se a chave de acesso existe e esta correta
+	key := c.Param("key")
+	if key == "" {
+		return c.Render(http.StatusUnauthorized, r.JSON(map[string]string{"message": "Requer chave de acesso"}))
+	}
+	if key != os.Getenv("SUPER_API_KEY") {
+		return c.Render(http.StatusForbidden, r.JSON(map[string]string{"message": "Chave de acesso invalida"}))
+	}
 	//Pega conexão ao banco de dados do contexto
 	tx, ok := c.Value("tx").(*pop.Connection)
 	if !ok {

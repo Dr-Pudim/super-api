@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"super_api/models"
@@ -28,7 +29,7 @@ func (as *ActionSuite) Test_Supers_Create() {
 	//Para cada caso de teste
 	for i, tcase := range tcases {
 		//Fazer chamada a api
-		res := as.JSON("/add?" + tcase.param).Get()
+		res := as.JSON(fmt.Sprintf("/%s/add?%s", os.Getenv("SUPER_API_KEY"), tcase.param)).Get()
 		//Conferir codigo de resposta
 		as.Equal(tcase.expectedRespCode, res.Code, fmt.Sprintf(`Codigo de Resposta esperado:%d Codigo de Resposta recebido:%d`, tcase.expectedRespCode, res.Code))
 		//Unmarshal do json
