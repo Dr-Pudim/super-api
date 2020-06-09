@@ -58,7 +58,7 @@ func App() *buffalo.App {
 		// Remove to disable this.
 		app.Use(popmw.Transaction(models.DB))
 
-		app.GET("/", HomeHandler)
+		app.GET("/", SupersAll)
 		app.GET("/{key}/add", SupersCreate)
 		app.GET("/all", SupersAll)
 		app.GET("/heros", SupersHeros)
