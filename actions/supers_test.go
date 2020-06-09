@@ -234,7 +234,7 @@ func (as *ActionSuite) Test_Supers_Villains() {
 	json.Unmarshal(res.Body.Bytes(), &supers)
 	//Confere numero de resultados
 	as.Assert().Equal(villainNumber, len(supers), fmt.Sprintf("Esperava encontrar %d supers, mas encontrou %d", villainNumber, len(supers)))
-	//Para cada super, testa de aligment é good
+	//Para cada super, testa de aligment é bad
 	for _, super := range supers {
 		as.Require().Equal("bad", strings.ToLower(super.Alignment), fmt.Sprintf(`Essa ação só deveria retornar supers com o aligment "bad", mas retornou o super "%s" que possui aligment "%s"`, super.Name, strings.ToLower(super.Alignment)))
 	}
