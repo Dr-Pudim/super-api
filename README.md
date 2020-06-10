@@ -20,7 +20,7 @@ API de super heróis e vilões que usa a [SuperHero API](https://www.superheroap
 ### Variaveis Opcionais
 
 * *TEST_DATABASE_URL* - Se for usar uma url diferente da padrão para o DB de teste
-* *DATABASE_URL* - Se for usar uma url diferente da padrão para o DB da produção(*Recomendado*)
+* *DATABASE_URL* - Se for usar uma url diferente da padrão para o DB da produção**(Recomendado)**
 
 ### Banco de Dados
 
