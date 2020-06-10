@@ -24,7 +24,7 @@ API de super heróis e vilões que usa a [SuperHero API](https://www.superheroap
 
 ### Banco de Dados
 
-A configuração padrão de desenvolvimento espera que você esteja usando [PostGreSQL](https://www.postgresql.org/) e tenha um usuario *postgres* cuja senha é *postgres*.
+A configuração padrão do DB de desenvolvimento espera que você esteja usando [PostGreSQL](https://www.postgresql.org/) e tenha um usuario *postgres* cuja senha é *postgres*.
 
 As configurações de banco de dados ficam em *database.yml*. Para ver as opções dispoveis visite a [documentação do gobuffalo](https://gobuffalo.io/en/docs/db/configuration/).
 
