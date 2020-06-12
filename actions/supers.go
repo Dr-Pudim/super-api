@@ -249,7 +249,7 @@ func SupersCreate(c buffalo.Context) error {
 	resp, err := http.Get(url)
 	//Tratamento de erro da chamada
 	if err != nil {
-		return c.Render(http.StatusInternalServerError, r.JSON(map[string]string{"message": "Erro na chamada a superheroapi"}))
+		return c.Render(http.StatusServiceUnavailable, r.JSON(map[string]string{"message": "Erro na chamada a superheroapi"}))
 	}
 	//Adiciona fechamento da resposta a pilha do defer
 	defer resp.Body.Close()
