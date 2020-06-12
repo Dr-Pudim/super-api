@@ -234,21 +234,26 @@ type superSearchResponse struct {
 	Results    []models.Super      `json:"results"`
 }
 
+type superSimpleResponse struct {
+	Response string         `json:"response"`
+	Results  []models.Super `json:"results"`
+}
+
 // SupersCreate default implementation.
 func SupersCreate(c buffalo.Context) error {
 	//Confere se a chave de acesso existe e esta correta
 	key := c.Param("key")
 	if key == "" {
-		return c.Render(http.StatusUnauthorized, r.JSON(map[string]string{"message": "Requer chave de acesso"}))
+		return c.Render(http.StatusUnauthorized, r.JSON(map[string]string{"response": "Requer chave de acesso"}))
 	}
 	if key != os.Getenv("SUPER_API_KEY") {
-		return c.Render(http.StatusForbidden, r.JSON(map[string]string{"message": "Chave de acesso invalida"}))
+		return c.Render(http.StatusForbidden, r.JSON(map[string]string{"response": "Chave de acesso invalida"}))
 	}
 	//Lê nome no parametro da rota
 	param := c.Param("name")
 	//Se não houver o parametro name, retornar mensagem
 	if param == "" {
-		return c.Render(http.StatusBadRequest, r.JSON(map[string]string{"message": "Sem parametro name para buscar"}))
+		return c.Render(http.StatusBadRequest, r.JSON(map[string]string{"response": "Sem parametro name para buscar"}))
 	}
 	//Gera url de pesquisa para consultar a superheroapi
 	url := fmt.Sprintf("https://superheroapi.com/api/%s/search/%s", os.Getenv("SUPERHEROAPI_ACCESS_TOKEN"), param)
@@ -256,7 +261,7 @@ func SupersCreate(c buffalo.Context) error {
 	resp, err := http.Get(url)
 	//Tratamento de erro da chamada
 	if err != nil {
-		return c.Render(http.StatusServiceUnavailable, r.JSON(map[string]string{"message": "Erro na chamada a superheroapi"}))
+		return c.Render(http.StatusServiceUnavailable, r.JSON(map[string]string{"response": "Erro na chamada a superheroapi"}))
 	}
 	//Adiciona fechamento da resposta a pilha do defer
 	defer resp.Body.Close()
@@ -264,14 +269,14 @@ func SupersCreate(c buffalo.Context) error {
 	respByte, err := ioutil.ReadAll(resp.Body)
 	//Tratamento de erro da leitura de resposta
 	if err != nil {
-		return c.Render(http.StatusInternalServerError, r.JSON(map[string]string{"message": "Erro na leitura da resposta"}))
+		return c.Render(http.StatusInternalServerError, r.JSON(map[string]string{"response": "Erro na leitura da resposta"}))
 	}
 	//Cria variavel para json de resposta e deserializa respByte
 	var searchResponse SearchResponse
 	err = json.Unmarshal(respByte, &searchResponse)
 	//Tratamento de erro da deserialização
 	if err != nil {
-		return c.Render(http.StatusInternalServerError, r.JSON(map[string]string{"message": "Erro na conversão de Json"}))
+		return c.Render(http.StatusInternalServerError, r.JSON(map[string]string{"response": "Erro na conversão de Json"}))
 	}
 	//Caso não tenha nenhum resultado, retorna erro
 	if searchResponse.Response == "error" {
@@ -292,7 +297,7 @@ func SupersCreate(c buffalo.Context) error {
 		//Tratamento de erro da conversão
 		if err != nil {
 			message := fmt.Sprintf("Erro na conversão do resultado %d", i)
-			return c.Render(http.StatusInternalServerError, r.JSON(map[string]string{"message": message}))
+			return c.Render(http.StatusInternalServerError, r.JSON(map[string]string{"Response": message}))
 		}
 		//Adiciona id a slice
 		resultsIDS = append(resultsIDS, originalID)
@@ -316,7 +321,7 @@ func SupersCreate(c buffalo.Context) error {
 		//Tratamento de erro da conversão
 		if err != nil {
 			message := fmt.Sprintf("Erro na conversão do resultado %d", i)
-			return c.Render(http.StatusInternalServerError, r.JSON(map[string]string{"message": message}))
+			return c.Render(http.StatusInternalServerError, r.JSON(map[string]string{"response": message}))
 		}
 		//Para cada id da superapi achado no bando de dados, confere se o resultado atual possui o mesmo id
 		for _, superOnDB := range supersAlreadyOnDB {
@@ -501,7 +506,9 @@ func SupersCreate(c buffalo.Context) error {
 			registredSupers = append(registredSupers, *super)
 		}
 	}
-	return c.Render(http.StatusCreated, r.JSON(registredSupers))
+	response := fmt.Sprintf("%d novos supers encontrados na base de dados. Total encontrados %d.", len(registredSupers), len(results))
+	responseJSON := superSimpleResponse{response, registredSupers}
+	return c.Render(http.StatusCreated, r.JSON(responseJSON))
 }
 
 //SupersAll lista todos os supers registrados
@@ -515,8 +522,14 @@ func SupersAll(c buffalo.Context) error {
 	supers := &models.Supers{}
 	//Executa query para pegar todos os supers
 	tx.Eager().All(supers)
-	//Renderiza json
-	return c.Render(http.StatusOK, r.JSON(supers))
+	numberOfSupers := len(*supers)
+	if numberOfSupers > 0 {
+		response := fmt.Sprintf("%d supers cadastrados.", numberOfSupers)
+		responseJSON := superSimpleResponse{response, *supers}
+		//Renderiza json
+		return c.Render(http.StatusOK, r.JSON(responseJSON))
+	}
+	return c.Render(http.StatusOK, r.JSON(map[string]string{"response": "Não existem supers ainda"}))
 }
 
 //SupersHeros lista todos os supers registrados que são herois
@@ -532,8 +545,18 @@ func SupersHeros(c buffalo.Context) error {
 	q := tx.Where("alignment = ?", "good")
 	//Executa query
 	q.Eager().All(supers)
+	numberOfHeros := len(*supers)
+	//Se achou heroi
+	if numberOfHeros > 0 {
+		//Criar resposta
+		response := fmt.Sprintf("%d herois cadastrados.", numberOfHeros)
+		responseJSON := superSimpleResponse{response, *supers}
+		//Renderiza json
+		return c.Render(http.StatusOK, r.JSON(responseJSON))
+	}
+	//Caso não tenham herois
 	//Renderiza json
-	return c.Render(http.StatusOK, r.JSON(supers))
+	return c.Render(http.StatusOK, r.JSON(map[string]string{"response": "Nenhum herois cadastrados"}))
 }
 
 //SupersVillains lista todos os supers registrados que são vilões
@@ -549,8 +572,18 @@ func SupersVillains(c buffalo.Context) error {
 	q := tx.Where("alignment = ?", "bad")
 	//Executa query
 	q.Eager().All(supers)
+	numberOfVillains := len(*supers)
+	//Se achou heroi
+	if numberOfVillains > 0 {
+		//Criar resposta
+		response := fmt.Sprintf("%d viões cadastrados.", numberOfVillains)
+		responseJSON := superSimpleResponse{response, *supers}
+		//Renderiza json
+		return c.Render(http.StatusOK, r.JSON(responseJSON))
+	}
+	//Caso não tenham herois
 	//Renderiza json
-	return c.Render(http.StatusOK, r.JSON(supers))
+	return c.Render(http.StatusOK, r.JSON(map[string]string{"response": "Nenhum vilão cadastrados"}))
 }
 
 //SupersDestroy deleta do banco de dados o super cujo id é passado pelo parametro "super_id"
