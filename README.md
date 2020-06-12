@@ -36,7 +36,7 @@ Com o *database.yml* devidamente configurado e seu banco de dados rodando, execu
 
 E aplique as migrações para atualizar o schema
 
- $ buffalo db migrate
+	$ buffalo db migrate
 
 Esse comando aplica as migrações no DB de desenvolvimento, para aplicar na produção execute
 
@@ -64,21 +64,21 @@ Você pode interagir com a API em [http://127.0.0.1:3000](http://127.0.0.1:3000)
 
 Listar todos os supers cadastrados:
 
-> /
+	/
 
 ou
 
-> /all
+	/all
 
 Cadastrar supers:
 
-> /{chave}/add?name={nome}
+	/{chave}/add?name={nome}
 
 Onde {chave} é o valor de SUPER_API_KEY e {nome} é o nome do super para ser cadastrado, a API procura por personagens na [SuperHero API](https://www.superheroapi.com/) que contem o valor de {nome}. Retornas os supers cadastrados.
 
 Para buscas supers:
 
-> /{chave}/search?{campo}={valor}
+	/{chave}/search?{campo}={valor}
 
 Onde {chave} é o valor de SUPER_API_KEY, {campo} o campo alvo da busca e {valor} o valor para buscar
 
@@ -109,18 +109,18 @@ Os campos disponiveis para busca:
 
 É possivel fazer uma pesquisa com multiplos campos usando **&**
 
-> /{chave}/search?{campo1}={valor1}&{campo2}={valor2}&{campo3}={valor3}
+	/{chave}/search?{campo1}={valor1}&{campo2}={valor2}&{campo3}={valor3}
 
 Listar todos os herois cadastratos
 
-> /heros
+	/heros
 
 Listar todos os vilões cadastrados
 
-> /villains
+	/villains
 
 Remover um super cadastrado
 
-> /{chave}/destroy?super_id={id}
+	/{chave}/destroy?super_id={id}
 
 Onde {chave} é o valor de SUPER_API_KEY e {id} o UUID do super a remover
