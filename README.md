@@ -26,7 +26,7 @@ API de super heróis e vilões que usa a [SuperHero API](https://www.superheroap
 
 A configuração padrão do DB de desenvolvimento espera que você esteja usando [PostGreSQL](https://www.postgresql.org/) e tenha um usuario *postgres* cuja senha é *postgres*.
 
-As configurações de banco de dados ficam em *database.yml*. Para ver as opções dispoveis visite a [documentação do gobuffalo](https://gobuffalo.io/en/docs/db/configuration/).
+As configurações de banco de dados ficam em *database.yml*. Para ver as opções disponíveis visite a [documentação do gobuffalo](https://gobuffalo.io/en/docs/db/configuration/).
 
 ## Criar Banco de Dados
 
@@ -82,7 +82,7 @@ Para buscas supers:
 
 Onde {chave} é o valor de SUPER_API_KEY, {campo} o campo alvo da busca e {valor} o valor para buscar
 
-Os campos disponiveis para busca:
+Os campos disponíveis para busca:
 
 * uuid
 * intelligence
