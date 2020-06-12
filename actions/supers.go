@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"io/ioutil"
 	"net/http"
+	"net/url"
 	"os"
 	"regexp"
 	"strconv"
@@ -225,6 +226,12 @@ type SearchResponse struct {
 	Response   string      `json:"response"`
 	Resultsfor string      `json:"results-for"`
 	Results    []character `json:"results"`
+}
+
+type superSearchResponse struct {
+	Response   string              `json:"response"`
+	ResultsFor map[string][]string `json:"results-for"`
+	Results    []models.Super      `json:"results"`
 }
 
 // SupersCreate default implementation.
@@ -741,5 +748,13 @@ func SupersSearch(c buffalo.Context) error {
 	if hairColor != "" {
 		supers = filterSupersHairColor(supers, hairColor)
 	}
-	return c.Render(http.StatusOK, r.JSON(supers))
+	paramMap := c.Params().(url.Values)
+	//Se nenhum hero foi achado com os parametros retorna erro
+	if len(supers) == 0 {
+		response := superSearchResponse{"Nenhum super encontrado na base de dados", paramMap, nil}
+		return c.Render(http.StatusNotFound, r.JSON(response))
+	}
+	//Se foi encontrado supers
+	response := superSearchResponse{fmt.Sprintf("%d resultados encontrados", len(supers)), paramMap, supers}
+	return c.Render(http.StatusOK, r.JSON(response))
 }
