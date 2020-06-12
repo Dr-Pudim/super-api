@@ -266,8 +266,10 @@ func SupersCreate(c buffalo.Context) error {
 	if err != nil {
 		return c.Render(http.StatusInternalServerError, r.JSON(map[string]string{"message": "Erro na conversão de Json"}))
 	}
+	//Caso não tenha nenhum resultado, retorna erro
 	if searchResponse.Response == "error" {
-		return c.Render(http.StatusInternalServerError, r.JSON(searchResponse))
+		response := SearchResponse{"Nenhum super encontrado na base de dados", param, nil}
+		return c.Render(http.StatusNotFound, r.JSON(response))
 	}
 	//Pega conexão ao banco de dados do contexto
 	tx, ok := c.Value("tx").(*pop.Connection)
