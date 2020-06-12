@@ -109,7 +109,7 @@ Os campos disponíveis para busca:
 
 É possivel fazer uma pesquisa com multiplos campos usando **&**
 
-	/{chave}/search?{campo1}={valor1}&{campo2}={valor2}&{campo3}={valor3}
+	/search?{campo1}={valor1}&{campo2}={valor2}&{campo3}={valor3}
 
 Listar todos os herois cadastratos
 
