@@ -78,7 +78,7 @@ Onde {chave} é o valor de SUPER_API_KEY e {nome} é o nome do super para ser ca
 
 Para buscas supers:
 
-	/{chave}/search?{campo}={valor}
+	/search?{campo}={valor}
 
 Onde {chave} é o valor de SUPER_API_KEY, {campo} o campo alvo da busca e {valor} o valor para buscar
 
